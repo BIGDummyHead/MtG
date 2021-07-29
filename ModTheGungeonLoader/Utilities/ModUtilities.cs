@@ -158,10 +158,17 @@ namespace Gungeon.Utilities
             return a;
         }
 
-        static bool ToBool(this bool? pass)
-        {
-            return pass ?? false;
-        }
+        /// <summary>
+        /// All player's playing.
+        /// </summary>
+        public static PlayerController[] AllPlayers => GameManager.Instance.AllPlayers;
+
+        /// <summary>
+        /// The current player, most active.
+        /// </summary>
+        public static PlayerController CurrentPlayer => GameManager.Instance.BestActivePlayer;
+
+
 
         /// <summary>
         /// Before a player changes their gun. 
