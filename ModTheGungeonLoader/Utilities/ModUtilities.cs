@@ -164,58 +164,58 @@ namespace Gungeon.Utilities
         }
 
         /// <summary>
-        /// Before a player changes their gun. Return false to stop method call.
+        /// Before a player changes their gun. 
         /// </summary>
         public static event GungeonDelegates.GunChange BeforeGunChange;
         /// <summary>
-        /// After a player changes their gun. Does not have an affect of the methods result
+        /// After a player changes their gun. 
         /// </summary>
         public static event GungeonDelegates.GunChange AfterGunChange;
 
         /// <summary>
-        /// Before a player clears a room. Return false to stop method call.
+        /// Before a player clears a room.
         /// </summary>
         public static event GungeonDelegates.RoomClear BeforeRoomClear;
 
         /// <summary>
-        /// After a player clears a room. Does not have an affect of the methods result
+        /// After a player clears a room.
         /// </summary>
         public static event GungeonDelegates.RoomClear AfterRoomClear;
 
         /// <summary>
-        /// Before a player enters a new room.  Return false to stop method call.
+        /// Before a player enters a new room.  
         /// </summary>
         public static event GungeonDelegates.RoomEnter BeforeRoomEnter;
         /// <summary>
-        /// After a player enters a new room.  Does not have an affect of the methods result
+        /// After a player enters a new room.
         /// </summary>
         public static event GungeonDelegates.RoomEnter AfterRoomEnter;
 
         /// <summary>
-        /// Before a player hits a <see cref="HealthHaver"/> Return false to stop method call.
+        /// Before a player hits a <see cref="HealthHaver"/> 
         /// </summary>
         public static event GungeonDelegates.PlayerDidDamage BeforePlayerDoesDamage;
         /// <summary>
-        /// After a player hits a <see cref="HealthHaver"/>.  Does not have an affect of the methods result
+        /// After a player hits a <see cref="HealthHaver"/>.  
         /// </summary>
         public static event GungeonDelegates.PlayerDidDamage AfterPlayerDoesDamage;
 
         /// <summary>
-        /// Before a player loses their armor Return false to stop method call.
+        /// Before a player loses their armor 
         /// </summary>
         public static event GungeonDelegates.PlayerLostArmor BeforePlayerLostArmor;
         /// <summary>
-        /// After a player loses their armor. Does not have an affect of the methods result
+        /// After a player loses their armor. 
         /// </summary>
         public static event GungeonDelegates.PlayerLostArmor AfterPlayerLostArmor;
 
         /// <summary>
-        /// Before the player is damaged Return false to stop method call.
+        /// Before the player is damaged.
         /// </summary>
         public static event GungeonDelegates.PlayerDamaged BeforePlayerDamaged;
 
         /// <summary>
-        /// After the player is damaged. Does not have an affect of the methods result
+        /// After the player is damaged. 
         /// </summary>
         public static event GungeonDelegates.PlayerDamaged AfterPlayerDamaged;
 
@@ -223,9 +223,9 @@ namespace Gungeon.Utilities
         [HarmonyPatch(typeof(PlayerController), "OnGunChanged", typeof(Gun), typeof(Gun), typeof(Gun), typeof(Gun), typeof(bool))]
         internal class _gunchange
         {
-            public static bool Prefix(PlayerController __instance, Gun previous, Gun current, Gun previousSecondary, Gun currentSecondary, bool newGun)
+            public static void Prefix(PlayerController __instance, Gun previous, Gun current, Gun previousSecondary, Gun currentSecondary, bool newGun)
             {
-                return (BeforeGunChange?.Invoke(__instance, previous, current, previousSecondary, currentSecondary, newGun)).ToBool();
+                BeforeGunChange?.Invoke(__instance, previous, current, previousSecondary, currentSecondary, newGun);
             }
 
             public static void Postfix(PlayerController __instance, Gun previous, Gun current, Gun previousSecondary, Gun currentSecondary, bool newGun)
@@ -237,9 +237,9 @@ namespace Gungeon.Utilities
         [HarmonyPatch(typeof(PlayerController), "OnRoomCleared")]
         internal class _roomclear
         {
-            public static bool Prefix(PlayerController __instance)
+            public static void Prefix(PlayerController __instance)
             {
-                return (BeforeRoomClear?.Invoke(__instance)).ToBool();
+                BeforeRoomClear?.Invoke(__instance);
             }
 
             public static void Postfix(PlayerController __instance)
@@ -251,9 +251,9 @@ namespace Gungeon.Utilities
         [HarmonyPatch(typeof(PlayerController), "EnteredNewRoom", typeof(RoomHandler))]
         internal class _roomEnter
         {
-            public static bool Prefix(PlayerController __instance, RoomHandler newRoom)
+            public static void Prefix(PlayerController __instance, RoomHandler newRoom)
             {
-                return (BeforeRoomEnter?.Invoke(__instance, newRoom)).ToBool();
+                BeforeRoomEnter?.Invoke(__instance, newRoom);
             }
 
             public static void Postfix(PlayerController __instance, RoomHandler newRoom)
@@ -265,9 +265,9 @@ namespace Gungeon.Utilities
         [HarmonyPatch(typeof(PlayerController), "OnDidDamage", typeof(float), typeof(bool), typeof(HealthHaver))]
         internal class _didDamage
         {
-            public static bool Prefix(PlayerController __instance, ref float damageDone, ref bool fatal, HealthHaver target)
+            public static void Prefix(PlayerController __instance, ref float damageDone, ref bool fatal, HealthHaver target)
             {
-                return (BeforePlayerDoesDamage?.Invoke(__instance, ref damageDone, ref fatal, target)).ToBool();
+                BeforePlayerDoesDamage?.Invoke(__instance, ref damageDone, ref fatal, target);
             }
 
             public static void Postfix(PlayerController __instance, ref float damageDone, ref bool fatal, HealthHaver target)
@@ -279,9 +279,9 @@ namespace Gungeon.Utilities
         [HarmonyPatch(typeof(PlayerController), "OnLostArmor")]
         internal class _lostArmor
         {
-            public static bool Prefix(PlayerController __instance)
+            public static void Prefix(PlayerController __instance)
             {
-                return ToBool(BeforePlayerLostArmor?.Invoke(__instance));
+               BeforePlayerLostArmor?.Invoke(__instance);
             }
 
             public static void Postfix(PlayerController __instance)
@@ -290,11 +290,12 @@ namespace Gungeon.Utilities
             }
         }
 
+        [HarmonyPatch(typeof(PlayerController), "Damaged", typeof(float), typeof(float), typeof(CoreDamageTypes), typeof(DamageCategory), typeof(Vector2))]
         internal class _plyerDmg
         {
-            public static bool Prefix(PlayerController __instance, float resultValue, float maxValue, CoreDamageTypes damageTypes, DamageCategory damageCategory, Vector2 damageDirection)
+            public static void Prefix(PlayerController __instance, float resultValue, float maxValue, CoreDamageTypes damageTypes, DamageCategory damageCategory, Vector2 damageDirection)
             {
-                return (BeforePlayerDamaged?.Invoke(__instance, resultValue, maxValue, damageTypes, damageCategory, damageDirection)).ToBool();
+                 BeforePlayerDamaged?.Invoke(__instance, resultValue, maxValue, damageTypes, damageCategory, damageDirection);
             }
 
             public static void Postfix(PlayerController __instance, float resultValue, float maxValue, CoreDamageTypes damageTypes, DamageCategory damageCategory, Vector2 damageDirection)

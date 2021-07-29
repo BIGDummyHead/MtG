@@ -17,18 +17,18 @@ namespace Gungeon.Events
         /// <param name="previousSecondary"></param>
         /// <param name="currentSecondary"></param>
         /// <param name="newGun"></param>
-        public delegate bool GunChange(PlayerController player, Gun previous, Gun current, Gun previousSecondary, Gun currentSecondary, bool newGun);
+        public delegate void GunChange(PlayerController player, Gun previous, Gun current, Gun previousSecondary, Gun currentSecondary, bool newGun);
         /// <summary>
         /// 
         /// </summary>
         /// <param name="player"></param>
-        public delegate bool RoomClear(PlayerController player);
+        public delegate void RoomClear(PlayerController player);
         /// <summary>
         /// 
         /// </summary>
         /// <param name="player"></param>
         /// <param name="room"></param>
-        public delegate bool RoomEnter(PlayerController player, RoomHandler room);
+        public delegate void RoomEnter(PlayerController player, RoomHandler room);
         /// <summary>
         /// 
         /// </summary>
@@ -36,19 +36,19 @@ namespace Gungeon.Events
         /// <param name="dmg"></param>
         /// <param name="wasFatal"></param>
         /// <param name="enemy"></param>
-        public delegate bool PlayerDidDamage(PlayerController player, ref float dmg, ref bool wasFatal, HealthHaver enemy);
+        public delegate void PlayerDidDamage(PlayerController player, ref float dmg, ref bool wasFatal, HealthHaver enemy);
         /// <summary>
         /// 
         /// </summary>
         /// <param name="player"></param>
-        public delegate bool PlayerLostArmor(PlayerController player);
+        public delegate void PlayerLostArmor(PlayerController player);
         /// <summary>
         /// 
         /// </summary>
         /// <param name="inventory"></param>
         /// <param name="gun"></param>
         /// <param name="makeActive"></param>
-        public delegate bool GunAddedToInventory(GunInventory inventory, Gun gun, ref bool makeActive);
+        public delegate void GunAddedToInventory(GunInventory inventory, Gun gun, ref bool makeActive);
         /// <summary>
         /// 
         /// </summary>
@@ -59,7 +59,7 @@ namespace Gungeon.Events
         /// <param name="damageCategory"></param>
         /// <param name="damageDirection"></param>
         /// <returns></returns>
-        public delegate bool PlayerDamaged(PlayerController player, float resultValue, float maxValue, CoreDamageTypes damangeTypes, DamageCategory damageCategory, Vector2 damageDirection);
+        public delegate void PlayerDamaged(PlayerController player, float resultValue, float maxValue, CoreDamageTypes damangeTypes, DamageCategory damageCategory, Vector2 damageDirection);
     }
 
 

@@ -19,7 +19,7 @@ namespace Gungeon.Utilities
         /// <returns></returns>
         public static Method GetMethod(this object instance, string name, params Type[] typeArgs)
         {
-            return new Method(instance.GetType(), name, typeArgs, instance);
+            return new Method(instance?.GetType(), name, typeArgs, instance);
         }
 
         /// <summary>
@@ -32,6 +32,16 @@ namespace Gungeon.Utilities
         public static Method GetStaticMethod(this Type owner, string name, params Type[] typeArgs)
         {
             return new Method(owner, name, typeArgs, null);
+        }
+
+        public static Variable GetVariable(this object instance, string name)
+        {
+            return new Variable(instance, instance?.GetType(), name);
+        }
+
+        public static Variable GetStaticVariable(this Type a, string name)
+        {
+            return new Variable(null, a, name);
         }
     }
 }

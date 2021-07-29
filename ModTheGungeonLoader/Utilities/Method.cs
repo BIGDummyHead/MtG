@@ -35,7 +35,7 @@ namespace Gungeon.Utilities
             Owner = owner ?? throw new ArgumentNullException(nameof(owner));
             Name = name;
             Arguments = args ?? throw new ArgumentNullException(nameof(args));
-            this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
+            this.instance = instance;
 
             _method = owner.GetMethod(name, ReflectionHandler.All, null, default, args, new ParameterModifier[0]) ?? throw new Exception("Method could not be found");
         }

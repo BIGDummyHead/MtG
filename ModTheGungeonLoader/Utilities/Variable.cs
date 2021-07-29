@@ -32,11 +32,11 @@ namespace Gungeon.Utilities
         private FieldInfo _field;
         private PropertyInfo _prop;
 
-        internal Variable(object instance, string name)
+        internal Variable(object instance, Type own, string name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
-            Owner = instance.GetType();
+            this.instance = instance;
+            Owner = own ?? throw new ArgumentNullException(nameof(own));
 
             MemberInfo tmp;
 
