@@ -158,73 +158,88 @@ namespace Gungeon.Utilities
             return a;
         }
 
+        static bool ToBool(this bool? pass)
+        {
+            return pass ?? false;
+        }
+
         /// <summary>
-        /// Before a player changes their gun.
+        /// Before a player changes their gun. Return false to stop method call.
         /// </summary>
         public static event GungeonDelegates.GunChange BeforeGunChange;
         /// <summary>
-        /// After a player changes their gun.
+        /// After a player changes their gun. Does not have an affect of the methods result
         /// </summary>
         public static event GungeonDelegates.GunChange AfterGunChange;
 
         /// <summary>
-        /// Before a player clears a room.
+        /// Before a player clears a room. Return false to stop method call.
         /// </summary>
         public static event GungeonDelegates.RoomClear BeforeRoomClear;
 
         /// <summary>
-        /// After a player clears a room.
+        /// After a player clears a room. Does not have an affect of the methods result
         /// </summary>
         public static event GungeonDelegates.RoomClear AfterRoomClear;
 
         /// <summary>
-        /// Before a player enters a new room.
+        /// Before a player enters a new room.  Return false to stop method call.
         /// </summary>
         public static event GungeonDelegates.RoomEnter BeforeRoomEnter;
         /// <summary>
-        /// After a player enters a new room.
+        /// After a player enters a new room.  Does not have an affect of the methods result
         /// </summary>
         public static event GungeonDelegates.RoomEnter AfterRoomEnter;
 
         /// <summary>
-        /// Before a player hits a <see cref="HealthHaver"/>
+        /// Before a player hits a <see cref="HealthHaver"/> Return false to stop method call.
         /// </summary>
         public static event GungeonDelegates.PlayerDidDamage BeforePlayerDoesDamage;
         /// <summary>
-        /// After a player hits a <see cref="HealthHaver"/>
+        /// After a player hits a <see cref="HealthHaver"/>.  Does not have an affect of the methods result
         /// </summary>
         public static event GungeonDelegates.PlayerDidDamage AfterPlayerDoesDamage;
 
         /// <summary>
-        /// Before a player loses their armor
+        /// Before a player loses their armor Return false to stop method call.
         /// </summary>
         public static event GungeonDelegates.PlayerLostArmor BeforePlayerLostArmor;
         /// <summary>
-        /// After a player loses their armor
+        /// After a player loses their armor. Does not have an affect of the methods result
         /// </summary>
         public static event GungeonDelegates.PlayerLostArmor AfterPlayerLostArmor;
+
+        /// <summary>
+        /// Before the player is damaged Return false to stop method call.
+        /// </summary>
+        public static event GungeonDelegates.PlayerDamaged BeforePlayerDamaged;
+
+        /// <summary>
+        /// After the player is damaged. Does not have an affect of the methods result
+        /// </summary>
+        public static event GungeonDelegates.PlayerDamaged AfterPlayerDamaged;
 
 
         [HarmonyPatch(typeof(PlayerController), "OnGunChanged", typeof(Gun), typeof(Gun), typeof(Gun), typeof(Gun), typeof(bool))]
         internal class _gunchange
         {
-            public static void Prefix(PlayerController __instance, ref Gun previous, ref Gun current, Gun previousSecondary, Gun currentSecondary, bool newGun)
+            public static bool Prefix(PlayerController __instance, Gun previous, Gun current, Gun previousSecondary, Gun currentSecondary, bool newGun)
             {
-                BeforeGunChange?.Invoke(__instance, ref previous, ref current, previousSecondary, currentSecondary, newGun);
+                return (BeforeGunChange?.Invoke(__instance, previous, current, previousSecondary, currentSecondary, newGun)).ToBool();
             }
 
-            public static void Postfix(PlayerController __instance, ref Gun previous, ref Gun current, Gun previousSecondary, Gun currentSecondary, bool newGun)
+            public static void Postfix(PlayerController __instance, Gun previous, Gun current, Gun previousSecondary, Gun currentSecondary, bool newGun)
             {
-                AfterGunChange?.Invoke(__instance, ref previous, ref current, previousSecondary, currentSecondary, newGun);
+                AfterGunChange?.Invoke(__instance, previous, current, previousSecondary, currentSecondary, newGun);
             }
         }
 
         [HarmonyPatch(typeof(PlayerController), "OnRoomCleared")]
         internal class _roomclear
         {
-            public static void Prefix(PlayerController __instance)
+            public static bool Prefix(PlayerController __instance)
             {
-                BeforeRoomClear?.Invoke(__instance);
+                return (BeforeRoomClear?.Invoke(__instance)).ToBool();
             }
 
             public static void Postfix(PlayerController __instance)
@@ -236,9 +251,9 @@ namespace Gungeon.Utilities
         [HarmonyPatch(typeof(PlayerController), "EnteredNewRoom", typeof(RoomHandler))]
         internal class _roomEnter
         {
-            public static void Prefix(PlayerController __instance, RoomHandler newRoom)
+            public static bool Prefix(PlayerController __instance, RoomHandler newRoom)
             {
-                BeforeRoomEnter?.Invoke(__instance, newRoom);
+                return (BeforeRoomEnter?.Invoke(__instance, newRoom)).ToBool();
             }
 
             public static void Postfix(PlayerController __instance, RoomHandler newRoom)
@@ -250,28 +265,41 @@ namespace Gungeon.Utilities
         [HarmonyPatch(typeof(PlayerController), "OnDidDamage", typeof(float), typeof(bool), typeof(HealthHaver))]
         internal class _didDamage
         {
-            public static void Prefix(PlayerController __instance, float damageDone, bool fatal, HealthHaver target)
+            public static bool Prefix(PlayerController __instance, ref float damageDone, ref bool fatal, HealthHaver target)
             {
-                BeforePlayerDoesDamage?.Invoke(__instance, damageDone, fatal, target);
+                return (BeforePlayerDoesDamage?.Invoke(__instance, ref damageDone, ref fatal, target)).ToBool();
             }
 
-            public static void Postfix(PlayerController __instance, float damageDone, bool fatal, HealthHaver target)
+            public static void Postfix(PlayerController __instance, ref float damageDone, ref bool fatal, HealthHaver target)
             {
-                AfterPlayerDoesDamage?.Invoke(__instance, damageDone, fatal, target);
+                AfterPlayerDoesDamage?.Invoke(__instance, ref damageDone, ref fatal, target);
             }
         }
 
         [HarmonyPatch(typeof(PlayerController), "OnLostArmor")]
         internal class _lostArmor
         {
-            public static void Prefix(PlayerController __instance)
+            public static bool Prefix(PlayerController __instance)
             {
-                BeforePlayerLostArmor?.Invoke(__instance);
+                return ToBool(BeforePlayerLostArmor?.Invoke(__instance));
             }
 
             public static void Postfix(PlayerController __instance)
             {
                 AfterPlayerLostArmor?.Invoke(__instance);
+            }
+        }
+
+        internal class _plyerDmg
+        {
+            public static bool Prefix(PlayerController __instance, float resultValue, float maxValue, CoreDamageTypes damageTypes, DamageCategory damageCategory, Vector2 damageDirection)
+            {
+                return (BeforePlayerDamaged?.Invoke(__instance, resultValue, maxValue, damageTypes, damageCategory, damageDirection)).ToBool();
+            }
+
+            public static void Postfix(PlayerController __instance, float resultValue, float maxValue, CoreDamageTypes damageTypes, DamageCategory damageCategory, Vector2 damageDirection)
+            {
+                AfterPlayerDamaged?.Invoke(__instance, resultValue, maxValue, damageTypes, damageCategory, damageDirection);
             }
         }
     }
