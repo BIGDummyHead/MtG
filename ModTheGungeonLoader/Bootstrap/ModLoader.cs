@@ -89,12 +89,14 @@ namespace Gungeon.Bootstrap
                 item.mod.Load(item.info);
             }
 
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine();
             Console.WriteLine("===========================================");
             Console.WriteLine($"Finished Loading Mods!");
             Console.WriteLine($"A total of {LoadedMods.Count} were loaded!");
             Console.WriteLine("===========================================");
             Console.WriteLine();
+            Console.ResetColor();
         }
         /// <summary>
         /// Refer to <see cref="ILoader.HandleConsole"/>
