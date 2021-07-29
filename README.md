@@ -14,16 +14,9 @@ MgT is my go at modding Enter the Gungeon!
 
 ## Install
 
-Manual: 
-
 1. Download this zip [file](https://github.com/BIGDummyHead/MtG/blob/master/mgt.zip)
 2. Unpack into Enter the Gungeon.exe directory.
 3. Enjoy
-
-With Installer:
-
-1. Select EtG.exe
-2. Enjoy
 
 ## Licensing
 
