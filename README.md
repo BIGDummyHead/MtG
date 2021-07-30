@@ -1,6 +1,6 @@
 # Mod the Gungeon
 
-MgT is my go at modding Enter the Gungeon!
+MtG is my go at modding Enter the Gungeon!
 
 Planned updates:
 
