@@ -34,14 +34,26 @@ namespace Gungeon.Utilities
             return new Method(owner, name, typeArgs, null);
         }
 
+        /// <summary>
+        /// Get a field or property by name
+        /// </summary>
+        /// <param name="instance">Object instance</param>
+        /// <param name="name">Name of field or property</param>
+        /// <returns></returns>
         public static Variable GetVariable(this object instance, string name)
         {
             return new Variable(instance, instance?.GetType(), name);
         }
 
-        public static Variable GetStaticVariable(this Type a, string name)
+        /// <summary>
+        /// Get a static field or property by name
+        /// </summary>
+        /// <param name="owner">Static field or property owner</param>
+        /// <param name="name">Name of field or property</param>
+        /// <returns></returns>
+        public static Variable GetStaticVariable(this Type owner, string name)
         {
-            return new Variable(null, a, name);
+            return new Variable(null, owner, name);
         }
     }
 }

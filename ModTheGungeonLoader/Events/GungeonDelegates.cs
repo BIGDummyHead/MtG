@@ -60,6 +60,27 @@ namespace Gungeon.Events
         /// <param name="damageDirection"></param>
         /// <returns></returns>
         public delegate void PlayerDamaged(PlayerController player, float resultValue, float maxValue, CoreDamageTypes damangeTypes, DamageCategory damageCategory, Vector2 damageDirection);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="projectile"></param>
+        /// <param name="belongsToPlayer"></param>
+        public delegate void OnProjectileShot(Projectile projectile, bool belongsToPlayer);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="projectile"></param>
+        /// <param name="belongsToPlayer"></param>
+        public delegate void WhileMoving(Projectile projectile, bool belongsToPlayer);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="projectile"></param>
+        /// <param name="lcr"></param>
+        /// <param name="allowActorSpawns"></param>
+        /// <param name="allowProjectileSpawns"></param>
+        /// <param name="belongsToPlayer"></param>
+        public delegate void OnProjectileHit(Projectile projectile, CollisionData lcr, bool belongsToPlayer, ref bool allowActorSpawns, ref bool allowProjectileSpawns);
     }
 
 
