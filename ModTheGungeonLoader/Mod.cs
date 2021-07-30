@@ -18,25 +18,40 @@ namespace Gungeon
         /// <summary>
         /// Info about a mod
         /// </summary>
-        [Serializable]
-        public class Info
+        [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+        public sealed class Info : Attribute
         {
+            /// <summary>
+            /// Basic info of your Mod
+            /// </summary>
+            /// <param name="name">Mod name</param>
+            /// <param name="description">Mod description</param>
+            /// <param name="developer">YOU</param>
+            /// <param name="version">Mod's version</param>
+            public Info(string name, string description, string developer, string version)
+            {
+                Name = name ?? string.Empty;
+                Description = description ?? string.Empty;
+                Developer = developer ?? string.Empty;
+                Version = version ?? string.Empty;
+            }
+
             /// <summary>
             /// Name of the mod
             /// </summary>
-            public string name;
+            public string Name { get; private set; }
             /// <summary>
             /// Description of the mod
             /// </summary>
-            public string desc;
+            public string Description { get; private set; }
             /// <summary>
             /// Developer of the mod
             /// </summary>
-            public string dev;
+            public string Developer { get; private set; }
             /// <summary>
             /// Version of the mod
             /// </summary>
-            public string ver;
+            public string Version { get; private set; }
 
             /// <summary>
             /// The directory of your mod, relevant to your mod folder.
@@ -54,7 +69,7 @@ namespace Gungeon
             /// <returns></returns>
             public override string ToString()
             {
-                return $"{name} : created by {dev}\r\n\r\n{desc}\r\n\r\nMod Version : {ver}";
+                return $"{Name} : created by {Developer}\r\n\r\n{Description}\r\n\r\nMod Version : {Version}";
             }
         }
     }

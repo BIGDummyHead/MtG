@@ -73,7 +73,7 @@ namespace Gungeon.Bootstrap
 
         public class Pack
         {
-            public string name;
+            public string key;
             public Mod mod;
             public Mod.Info info;
         }
@@ -84,19 +84,22 @@ namespace Gungeon.Bootstrap
         public void FinishLoad()
         {
             Console.WriteLine();
-            foreach (var item in LoadedMods.Values)
+            foreach (Pack zippedMod in LoadedMods.Values)
             {
-                item.mod.Load(item.info);
+                zippedMod.mod.Load(zippedMod.info);
+                Console.Title = $"{zippedMod.info.Name} - Loading...";
             }
 
-            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine();
             Console.WriteLine("===========================================");
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"Finished Loading Mods!");
             Console.WriteLine($"A total of {LoadedMods.Count} were loaded!");
+            Console.ResetColor();
             Console.WriteLine("===========================================");
             Console.WriteLine();
-            Console.ResetColor();
+
+            Console.Title = $"Mods Loaded ({LoadedMods.Count})  |  Created by BIGDummyHead on GitHub";
         }
         /// <summary>
         /// Refer to <see cref="ILoader.HandleConsole"/>
@@ -104,6 +107,16 @@ namespace Gungeon.Bootstrap
         public void HandleConsole()
         {
             DefaultConsole.Open();
+        }
+
+        static T GetCustomAttribute<T>(Type type, bool inherit = false)
+        {
+            object[] o = type.GetCustomAttributes(typeof(T), inherit);
+
+            if (o.Length < 1)
+                return default;
+
+            return (T)o[0];
         }
 
         /// <summary>
@@ -115,57 +128,57 @@ namespace Gungeon.Bootstrap
             {
                 string[] files = Directory.GetFiles(dir);
 
-                string modInfoFile = (files.Length < 1) ? default : files.FirstOrDefault(x => Path.GetExtension(x).Equals(".mod"));
-
-                if (modInfoFile != default)
+                foreach (string file in files)
                 {
-                    Mod.Info infoOnMod = Settings.Read<Mod.Info>(modInfoFile);
-                    infoOnMod.Directory = dir;
+                    string ext = Path.GetExtension(file);
 
-                    if (LoadedMods.ContainsKey(infoOnMod.name))
+                    if (ext.Equals(".dll"))
                     {
-                        Debug.Logger.LogWarning($"Mod has already been loaded : {infoOnMod.name}");
-                    }
-                    else
-                    {
-                        foreach (string file in files)
+                        Mod.Info infoOnMod = null;
+                        try
                         {
-                            string ext = Path.GetExtension(file);
+                            Assembly assem = Assembly.LoadFrom(file);
+                            var mods = assem.GetTypes().Where(x => x.BaseType == typeof(Mod) && x.GetConstructor(new Type[0]) != null && !x.IsAbstract);
 
-                            if (ext.Equals(".dll"))
+                            foreach (Type mod in mods)
                             {
-                                try
+                                infoOnMod = GetCustomAttribute<Mod.Info>(mod) ?? CreateInfo(mod, LoadedMods.Count + 1);
+                                if (LoadedMods.ContainsKey(infoOnMod.Name))
                                 {
-                                    Assembly assem = Assembly.LoadFrom(file);
-                                    var mods = assem.GetTypes().Where(x => x.BaseType == typeof(Mod) && x.GetConstructor(new Type[0]) != null && !x.IsAbstract);
-
-                                    foreach (Type mod in mods)
-                                    {
-                                        var instance = Activator.CreateInstance(mod) as Mod;
-
-                                        Console.WriteLine(infoOnMod.Format());
-
-                                        LoadedMods.Add(infoOnMod.name, new Pack
-                                        {
-                                            name = infoOnMod.name,
-                                            info = infoOnMod,
-                                            mod = instance
-                                        });
-                                    }
+                                    Debug.Logger.LogWarning($"Mod has already been loaded : {infoOnMod.Name}");
                                 }
-                                catch (Exception ex)
+                                else
                                 {
-                                    Debug.Logger.LogWarning($"Woah, something happened while loading {infoOnMod.name}");
-                                    Debug.Logger.LogError($"{ex.Message}\r\n{ex.InnerException?.Message}");
+                                    var instance = Activator.CreateInstance(mod) as Mod;
+                                    Console.WriteLine(infoOnMod.Format());
+                                    string addName = $"{infoOnMod.Name}_{LoadedMods.Count + 1}";
+                                    LoadedMods.Add(addName, new Pack
+                                    {
+                                        key = addName,
+                                        info = infoOnMod,
+                                        mod = instance
+                                    });
                                 }
                             }
-                        }
 
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.Logger.LogWarning($"Woah, something happened while loading {infoOnMod.Name}");
+                            Debug.Logger.LogError($"{ex.Message}\r\n{ex.InnerException?.Message}");
+                        }
                     }
                 }
 
 
+
             }
+        }
+
+        public Mod.Info CreateInfo(Type type, int modNumber)
+        {
+            return new Mod.Info($"{type.Name}_{modNumber}", "No description is provided", "Unknown", "Unknown");
         }
     }
 
