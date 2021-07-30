@@ -24,7 +24,7 @@ MgT is my go at modding Enter the Gungeon!
 
 ## Wiki
 
-This project has a wiki which can be found [here](insert)
+This project has a wiki which can be found [here](https://github.com/BIGDummyHead/MtG/wiki)
 
 ## Dependencies
 
