@@ -4,10 +4,10 @@ MtG is my go at modding Enter the Gungeon!
 
 Planned updates:
 
-+ Extra Mod utils - July 31st
-+ Easy loot spawning - July 31st
-+ Easy item adding - August 2nd
-+ Character builder in Unity Editor - Mid August
++ [X] Extra Mod utils - July 31st
++ [x] Easy loot spawning - July 31st
++ [ ] Easy item adding - August 2nd
++ [ ] Character builder in Unity Editor - Mid August
 
 ## Why choose this loader?
 
