@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Gungeon
 {
@@ -28,14 +30,72 @@ namespace Gungeon
             /// <param name="description">Mod description</param>
             /// <param name="developer">YOU</param>
             /// <param name="version">Mod's version</param>
-            /// <param name="color">The color of your console when loading</param>
-            public Info(string name, string description, string developer, string version, ConsoleColor? color = null)
+            /// <param name="colorName">The color of your console when loading</param>
+            public Info(string name, string description, string developer, string version, string colorName = null)
             {
                 Name = name ?? string.Empty;
                 Description = description ?? string.Empty;
                 Developer = developer ?? string.Empty;
                 Version = version ?? string.Empty;
-                WriteColor = color ?? ConsoleColor.White;
+
+                bool z = TryParse(colorName, true, out ConsoleColor color);
+
+                WriteColor = z ? color : ConsoleColor.White;
+            }
+
+            bool TryParse(Type etype, string parse, bool ignoreCase, out object o)
+            {
+                string[] names = Enum.GetNames(etype);
+
+                if (ignoreCase)
+                {
+                    names = ToLower(names);
+                    parse = parse.ToLower();
+                }
+
+                List<string> _contains = names.ToList();
+
+                if (_contains.Contains(parse))
+                {
+                    Array values = Enum.GetValues(etype);
+                    o = null;
+
+                    StringComparison comparison = ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+                    foreach (object value in values)
+                    {
+                        if (value.ToString().Equals(parse, comparison))
+                            o = value;
+                    }
+
+                    return true;
+                }
+
+                o = null;
+                return false;
+            }
+
+            bool TryParse<T>(string parse, bool ignoreCase, out T a) where T : Enum
+            {
+                bool ret = TryParse(typeof(T), parse, ignoreCase, out object b);
+
+                if (!ret)
+                {
+                    a = default;
+                    return false;
+                }
+
+                a = (T)b;
+                return true;
+            }
+
+            string[] ToLower(string[] toLower)
+            {
+                for (int i = 0; i < toLower.Length; i++)
+                {
+                    toLower[i] = toLower[i].ToLower();
+                }
+
+                return toLower;
             }
 
             /// <summary>

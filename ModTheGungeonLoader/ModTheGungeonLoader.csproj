@@ -92,10 +92,10 @@
     <Compile Include="Mod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Utilities\Builder\LootTableBuilder.cs" />
     <Compile Include="Utilities\ChestPrefabs.cs" />
     <Compile Include="Utilities\Method.cs" />
     <Compile Include="Utilities\ModUtilities.cs" />
-    <Compile Include="Utilities\PickupObjectBuilder.cs" />
     <Compile Include="Utilities\ReflectionHandler.cs" />
     <Compile Include="Utilities\Variable.cs" />
   </ItemGroup>
