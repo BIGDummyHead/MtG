@@ -1,3 +1,9 @@
+# Changes
+
+Please when pushing updates, add your update info below. We will delete this after project is not private.
+
+## Changes:
+
 # Mod the Gungeon
 
 MtG is my go at modding Enter the Gungeon!
