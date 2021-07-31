@@ -4,6 +4,9 @@ Please when pushing updates, add your update info below. We will delete this aft
 
 ## Changes:
 
++ Removed Item Builder
++ Added in Loot Table Builder.
+
 # Mod the Gungeon
 
 MtG is my go at modding Enter the Gungeon!
