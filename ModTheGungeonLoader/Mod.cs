@@ -28,12 +28,14 @@ namespace Gungeon
             /// <param name="description">Mod description</param>
             /// <param name="developer">YOU</param>
             /// <param name="version">Mod's version</param>
-            public Info(string name, string description, string developer, string version)
+            /// <param name="color">The color of your console when loading</param>
+            public Info(string name, string description, string developer, string version, ConsoleColor? color = null)
             {
                 Name = name ?? string.Empty;
                 Description = description ?? string.Empty;
                 Developer = developer ?? string.Empty;
                 Version = version ?? string.Empty;
+                WriteColor = color ?? ConsoleColor.White;
             }
 
             /// <summary>
@@ -57,6 +59,12 @@ namespace Gungeon
             /// The directory of your mod, relevant to your mod folder.
             /// </summary>
             public string Directory { get; internal set; }
+
+
+            /// <summary>
+            /// The console color when writing out your mod.
+            /// </summary>
+            public ConsoleColor WriteColor { get; private set; }
 
             internal string Format()
             {

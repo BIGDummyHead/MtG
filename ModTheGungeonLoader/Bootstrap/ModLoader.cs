@@ -87,7 +87,6 @@ namespace Gungeon.Bootstrap
             foreach (Pack zippedMod in LoadedMods.Values)
             {
                 zippedMod.mod.Load(zippedMod.info);
-                Console.Title = $"{zippedMod.info.Name} - Loading...";
             }
 
             Console.WriteLine();
@@ -150,7 +149,9 @@ namespace Gungeon.Bootstrap
                                 else
                                 {
                                     var instance = Activator.CreateInstance(mod) as Mod;
+                                    Console.ForegroundColor = infoOnMod.WriteColor;
                                     Console.WriteLine(infoOnMod.Format());
+                                    Console.ResetColor();
                                     string addName = $"{infoOnMod.Name}_{LoadedMods.Count + 1}";
                                     LoadedMods.Add(addName, new Pack
                                     {

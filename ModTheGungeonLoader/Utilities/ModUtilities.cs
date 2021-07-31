@@ -282,7 +282,7 @@ namespace Gungeon.Utilities
 
                 int pick = new System.Random().Next(0, passives.Count);
                 
-                return passives[pick] as PassiveItem;
+                return passives[pick];
             }
         }
 
@@ -310,6 +310,7 @@ namespace Gungeon.Utilities
             return PickupObjectDatabase.GetRandomPassiveOfQualities(ran, excludeIDs, qualities);
            
         }
+
 
         static AudioType GetAudioType(string ext)
         {

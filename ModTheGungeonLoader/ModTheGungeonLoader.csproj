@@ -95,6 +95,7 @@
     <Compile Include="Utilities\ChestPrefabs.cs" />
     <Compile Include="Utilities\Method.cs" />
     <Compile Include="Utilities\ModUtilities.cs" />
+    <Compile Include="Utilities\PickupObjectBuilder.cs" />
     <Compile Include="Utilities\ReflectionHandler.cs" />
     <Compile Include="Utilities\Variable.cs" />
   </ItemGroup>
