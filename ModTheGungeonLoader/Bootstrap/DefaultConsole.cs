@@ -49,23 +49,25 @@ namespace Gungeon.Bootstrap
             }
         }
 
+        private const string Unity = "UnityEngine.dll";
         private static void Application_logMessageReceived(string condition, string stackTrace, LogType type)
         {
             switch (type)
             {
                 case LogType.Error:
-                    Debug.Logger.LogError(condition);
+                    Debug.Logger.LogUnformatted($"ERROR: {condition}", Unity, ConsoleColor.Red);
                     break;
                 case LogType.Assert:
+                    Debug.Logger.LogUnformatted($"ASSERT: {condition}", Unity, ConsoleColor.DarkYellow);
                     break;
                 case LogType.Warning:
-                    Debug.Logger.LogWarning(condition);
+                    Debug.Logger.LogUnformatted($"WARNING: {condition}", Unity, ConsoleColor.Yellow);
                     break;
                 case LogType.Log:
-                    Debug.Logger.Log(condition);
+                    Debug.Logger.LogUnformatted($"LOG: {condition}", Unity);
                     break;
                 case LogType.Exception:
-                    Debug.Logger.LogError(condition);
+                    Debug.Logger.LogUnformatted($"ERROR: {condition}", Unity, ConsoleColor.Red);
                     break;
             }
         }

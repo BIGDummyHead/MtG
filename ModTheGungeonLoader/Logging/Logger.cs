@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace Gungeon.Debug
 {
@@ -25,7 +27,7 @@ namespace Gungeon.Debug
         /// <param name="color">Foreground color</param>
         public static void Log(this object msg, ConsoleColor color = ConsoleColor.White)
         {
-            LogUnformatted(Format("log", msg?.ToString()), clr: color);
+            LogUnformatted(Format("log", msg?.ToString()), $"{Assembly.GetCallingAssembly().GetName().Name}.dll", color);
         }
 
         /// <summary>
@@ -34,7 +36,7 @@ namespace Gungeon.Debug
         /// <param name="msg">The message you would like to print</param>
         public static void LogWarning(this object msg)
         {
-            LogUnformatted(Format("warning", msg?.ToString()), clr: ConsoleColor.Yellow);
+            LogUnformatted(Format("warning", msg?.ToString()), $"{Assembly.GetCallingAssembly().GetName().Name}.dll", ConsoleColor.Yellow);
         }
 
         /// <summary>
@@ -43,27 +45,27 @@ namespace Gungeon.Debug
         /// <param name="msg">The message you would like to print</param>
         public static void LogError(this object msg)
         {
-            LogUnformatted(Format("error", msg?.ToString()), clr: ConsoleColor.Red);
+            LogUnformatted(Format("error", msg?.ToString()), $"{Assembly.GetCallingAssembly().GetName().Name}.dll",ConsoleColor.Red);
         }
 
         /// <summary>
-        /// Log an unformatted msg, which you can include <paramref name="withTime"/>
+        /// Log an unformatted msg, which you can include <paramref name="dll"/>
         /// </summary>
         /// <param name="msg">Print</param>
-        /// <param name="withTime">Time Format</param>
+        /// <param name="dll">Time Format and calling assembly</param>
         /// <param name="clr">Color (Foreground)</param>
-        public static void LogUnformatted(object msg, bool withTime = true, ConsoleColor clr = ConsoleColor.White)
+        public static void LogUnformatted(object msg, string dll, ConsoleColor clr = ConsoleColor.White)
         {
-            if (withTime)
-            {
-                Console.Write("[");
-                Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.Write($"{DateTime.UtcNow}");
-
-                Console.ResetColor();
-                Console.Write("] | ");
-            }
-
+            Console.Write("[");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write($"{DateTime.Now:HH:mm:ss}");
+            Console.ResetColor();
+            Console.Write(" - ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write(dll);
+            Console.ResetColor();
+            Console.Write("] | ");
+            
             Console.ForegroundColor = clr;
             Console.WriteLine(msg);
             Console.ResetColor();
