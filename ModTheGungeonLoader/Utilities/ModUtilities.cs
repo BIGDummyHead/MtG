@@ -443,7 +443,15 @@ namespace Gungeon.Utilities
         /// Called while a bullet is moving.
         /// </summary>
         public static event GungeonDelegates.WhileMoving AfterMoving;
-
+        /// <summary>
+        /// Before a enemy has died
+        /// </summary>
+        public static event GungeonDelegates.OnEnemyDied BeforeEnemyDied;
+        /// <summary>
+        /// After a enemy has died
+        /// </summary>
+        public static event GungeonDelegates.OnEnemyDied AfterEnemyDied;
+        
 
         [HarmonyPatch(typeof(Projectile), "HandleDestruction", typeof(CollisionData), typeof(bool), typeof(bool))]
         internal class _projHit
@@ -573,6 +581,20 @@ namespace Gungeon.Utilities
             public static void Postfix(PlayerController __instance, float resultValue, float maxValue, CoreDamageTypes damageTypes, DamageCategory damageCategory, Vector2 damageDirection)
             {
                 AfterPlayerDamaged?.Invoke(__instance, resultValue, maxValue, damageTypes, damageCategory, damageDirection);
+            }
+        }
+        
+        [HarmonyPatch(typeof(AIActor), "PreDeath", typeof(Vector2))]
+        internal class preDeath
+        {
+            public static void Prefix(AIActor __instance, Vector2 finalDamageDirection)
+            {
+                BeforeEnemyDied?.Invoke(__instance, finalDamageDirection);
+            }
+
+            public static void Postfix(AIActor __instance, Vector2 finalDamageDirection)
+            {
+                AfterEnemyDied?.Invoke(__instance, finalDamageDirection);
             }
         }
     }
