@@ -81,6 +81,12 @@ namespace Gungeon.Events
         /// <param name="allowProjectileSpawns"></param>
         /// <param name="belongsToPlayer"></param>
         public delegate void OnProjectileHit(Projectile projectile, CollisionData lcr, bool belongsToPlayer, ref bool allowActorSpawns, ref bool allowProjectileSpawns);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="enemy"></param>
+        /// <param name="finalDamageDirection"></param> 
+        public delegate void OnEnemyDied(AIActor enemy, Vector2 finalDamageDirection);
     }
 
 
