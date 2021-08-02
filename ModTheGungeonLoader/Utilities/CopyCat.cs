@@ -23,13 +23,6 @@ namespace Gungeon.Utilities
         public static void Copy(this object copyFrom, object copyTo)
         {
             Type copyType = copyFrom.GetType();
-            Type pasteType = copyTo.GetType();
-
-            if(!ChildInheritsParent(pasteType, copyType) || copyType != pasteType)
-            {
-                "Types do not match and conversion could not be made.".LogError();
-                return;
-            }
 
             foreach (FieldInfo field in copyType.GetFields(All))
             {
@@ -95,17 +88,6 @@ namespace Gungeon.Utilities
             }
 
             return _a;
-        }
-
-        static bool ChildInheritsParent(Type child, Type parent)
-        {
-            if (child.BaseType == null)
-                return false;
-
-            if (child.BaseType == parent)
-                return true;
-            else
-                return ChildInheritsParent(child.BaseType, parent);
         }
 
     }
