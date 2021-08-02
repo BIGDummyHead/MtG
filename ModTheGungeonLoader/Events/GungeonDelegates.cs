@@ -87,6 +87,15 @@ namespace Gungeon.Events
         /// <param name="enemy"></param>
         /// <param name="finalDamageDirection"></param> 
         public delegate void OnEnemyDied(AIActor enemy, Vector2 finalDamageDirection);
+
+
+        /// <summary>
+        /// For objects that can be picked up.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <param name="pickUpUser"></param>
+        public delegate void OnPickup<T>(T obj, PlayerController pickUpUser) where T : PickupObject;
     }
 
 

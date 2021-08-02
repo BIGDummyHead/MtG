@@ -451,7 +451,15 @@ namespace Gungeon.Utilities
         /// After a enemy has died
         /// </summary>
         public static event GungeonDelegates.OnEnemyDied AfterEnemyDied;
-        
+
+        /// <summary>
+        /// Before any object in game is picked up by a player
+        /// </summary>
+        public static event GungeonDelegates.OnPickup<PassiveItem> BeforePassivePickup;
+        /// <summary>
+        /// After any object in game is picked up by a player
+        /// </summary>
+        public static event GungeonDelegates.OnPickup<PassiveItem> AfterPassivePickup;
 
         [HarmonyPatch(typeof(Projectile), "HandleDestruction", typeof(CollisionData), typeof(bool), typeof(bool))]
         internal class _projHit
@@ -585,7 +593,7 @@ namespace Gungeon.Utilities
         }
         
         [HarmonyPatch(typeof(AIActor), "PreDeath", typeof(Vector2))]
-        internal class preDeath
+        internal class _enemyDeath
         {
             public static void Prefix(AIActor __instance, Vector2 finalDamageDirection)
             {
@@ -595,6 +603,20 @@ namespace Gungeon.Utilities
             public static void Postfix(AIActor __instance, Vector2 finalDamageDirection)
             {
                 AfterEnemyDied?.Invoke(__instance, finalDamageDirection);
+            }
+        }
+
+        [HarmonyPatch(typeof(PassiveItem), "Pickup", typeof(PlayerController))]
+        internal class _onObjectPickup
+        {
+            public static void Prefix(PassiveItem __instance, PlayerController player)
+            {
+                BeforePassivePickup?.Invoke(__instance, player);
+            }
+
+            public static void Postfix(PassiveItem __instance, PlayerController player)
+            {
+                AfterPassivePickup?.Invoke(__instance, player);
             }
         }
     }

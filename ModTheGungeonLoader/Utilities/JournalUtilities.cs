@@ -99,6 +99,80 @@ namespace Gungeon.Utilities
         {
             SetItem(entry?.encounterTrackable?.journalData?.NotificationPanelDescription, name);
         }
+        /// <summary>
+        /// Set the sprite of the ammonomicon
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <param name="resource"></param>
+        public static void SetSprite(this JournalEntry entry, string resource)
+        {
+            SetItem(entry?.AmmonomiconSprite, resource);
+        }
+        /// <summary>
+        /// Set the sprite of the ammonomicon
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <param name="resource"></param>
+        public static void SetSprite(this EncounterTrackable entry, string resource)
+        {
+            SetItem(entry?.journalData?.AmmonomiconSprite, resource);
+        }
+
+        /// <summary>
+        /// Set the sprite of the ammonomicon
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <param name="resource"></param>
+        public static void SetSprite(this PickupObject entry, string resource)
+        {
+            SetItem(entry?.encounterTrackable?.journalData?.AmmonomiconSprite, resource);
+        }
+
+
+        /// <summary>
+        /// Get table
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        public static Dictionary<string, StringTableManager.StringCollection> GetTable(Table table)
+        {
+            switch (table)
+            {
+                case Table.Core:
+                    return StringTableManager.CoreTable;
+                case Table.Item:
+                    return StringTableManager.ItemTable;
+                case Table.Intro:
+                    return StringTableManager.IntroTable;
+                case Table.Enemy:
+                    return StringTableManager.EnemyTable;
+            }
+
+            return StringTableManager.ItemTable;
+        }
+
+        /// <summary>
+        /// Add a value to a table, for later use.
+        /// </summary>
+        /// <param name="table">Table to add to</param>
+        /// <param name="key">Key value</param>
+        /// <param name="value">Value</param>
+        public static void AddTo(Table table, string key, string value)
+        {
+            var _table = GetTable(table);
+
+            if (KeyNull(key))
+                return;
+
+            if (_table.ContainsKey(key))
+            {
+                $"'{key}' is already present in {table}".LogError();
+                return;
+            }
+
+            _table.Add(key, (ImplicitStringCollection)value);
+        }
+
 
         /// <summary>
         /// Change an item's value from the key. The table is automatically determined via the key provided.
@@ -109,12 +183,11 @@ namespace Gungeon.Utilities
         {
             if (KeyNull(key))
                 return;
-
             var table = GetTable(key);
 
             if (table == null)
             {
-                $"'{key}' is not present in Item Table".LogError();
+                $"'{key}' is not present in Table".LogError();
                 return;
             }
 
@@ -144,5 +217,28 @@ namespace Gungeon.Utilities
 
             return r;
         }
+    }
+
+    /// <summary>
+    /// A table with <see cref="StringTableManager.StringCollection"/>
+    /// </summary>
+    public enum Table
+    {
+        /// <summary>
+        /// Core table
+        /// </summary>
+        Core,
+        /// <summary>
+        /// Item table
+        /// </summary>
+        Item,
+        /// <summary>
+        /// Intro table
+        /// </summary>
+        Intro,
+        /// <summary>
+        /// Enemy table
+        /// </summary>
+        Enemy
     }
 }
