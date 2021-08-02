@@ -58,6 +58,45 @@ namespace Gungeon.Utilities
             }
         }
 
+
+        /// <summary>
+        /// Create an instance of <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="copyFrom"></param>
+        /// <param name="constructorArgs"></param>
+        /// <returns></returns>
+        public static T Copy<T>(this object copyFrom, params object[] constructorArgs)
+        {
+            Type b = typeof(T);
+
+            var c = b.GetConstructor(GetConstArgs(constructorArgs));
+
+            if(c == null)
+            {
+                "Constructor does not exist".LogError();
+                return default;
+            }
+
+            object instance = Activator.CreateInstance(b, constructorArgs);
+
+            Copy(copyFrom, instance);
+
+            return (T)instance;
+        }
+
+        static Type[] GetConstArgs(object[] args)
+        {
+            Type[] _a = new Type[args.Length];
+
+            for (int i = 0; i < args.Length; i++)
+            {
+                _a[i] = args[i].GetType();
+            }
+
+            return _a;
+        }
+
         static bool ChildInheritsParent(Type child, Type parent)
         {
             if (child.BaseType == null)
