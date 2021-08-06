@@ -25,6 +25,8 @@ namespace Gungeon.Utilities
         internal readonly MethodInfo _method;
         internal readonly object instance;
 
+        /// <exception cref="ArgumentNullException"/>
+        /// <exception cref="Exception"/>
         internal Method(Type owner, string name, Type[] args, object instance)
         {
             if (string.IsNullOrEmpty(name))
@@ -37,7 +39,7 @@ namespace Gungeon.Utilities
             Arguments = args ?? throw new ArgumentNullException(nameof(args));
             this.instance = instance;
 
-            _method = owner.GetMethod(name, ReflectionHandler.All, null, default, args, new ParameterModifier[0]) ?? throw new Exception("Method could not be found");
+            _method = owner.GetMethod(name, CodeExtensions.All, null, default, args, new ParameterModifier[0]) ?? throw new Exception("Method could not be found");
         }
 
         /// <summary>
@@ -55,6 +57,7 @@ namespace Gungeon.Utilities
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
+        /// <value>Return type of the invoked method.</value>
         public object this[params object[] index] => Invoke(index);
     }
 }

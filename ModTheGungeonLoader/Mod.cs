@@ -43,60 +43,7 @@ namespace Gungeon
                 WriteColor = z ? color : ConsoleColor.White;
             }
 
-            bool TryParse(Type etype, string parse, bool ignoreCase, out object o)
-            {
-                string[] names = Enum.GetNames(etype);
-
-                if (ignoreCase)
-                {
-                    names = ToLower(names);
-                    parse = parse.ToLower();
-                }
-
-                List<string> _contains = names.ToList();
-
-                if (_contains.Contains(parse))
-                {
-                    Array values = Enum.GetValues(etype);
-                    o = null;
-
-                    StringComparison comparison = ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
-                    foreach (object value in values)
-                    {
-                        if (value.ToString().Equals(parse, comparison))
-                            o = value;
-                    }
-
-                    return true;
-                }
-
-                o = null;
-                return false;
-            }
-
-            bool TryParse<T>(string parse, bool ignoreCase, out T a) where T : Enum
-            {
-                bool ret = TryParse(typeof(T), parse, ignoreCase, out object b);
-
-                if (!ret)
-                {
-                    a = default;
-                    return false;
-                }
-
-                a = (T)b;
-                return true;
-            }
-
-            string[] ToLower(string[] toLower)
-            {
-                for (int i = 0; i < toLower.Length; i++)
-                {
-                    toLower[i] = toLower[i].ToLower();
-                }
-
-                return toLower;
-            }
+            
 
             /// <summary>
             /// Name of the mod

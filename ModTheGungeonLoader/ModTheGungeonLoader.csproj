@@ -94,12 +94,12 @@
     <Compile Include="Settings.cs" />
     <Compile Include="Utilities\Builder\LootTableBuilder.cs" />
     <Compile Include="Utilities\ChestPrefabs.cs" />
-    <Compile Include="Utilities\CopyCat.cs" />
-    <Compile Include="Utilities\ImplicitStringCollection.cs" />
-    <Compile Include="Utilities\JournalUtilities.cs" />
+    <Compile Include="Utilities\Extensions\CopyCat.cs" />
+    <Compile Include="Utilities\Internal\ImplicitStringCollection.cs" />
+    <Compile Include="Utilities\Extensions\JournalUtilities.cs" />
     <Compile Include="Utilities\Method.cs" />
-    <Compile Include="Utilities\ModUtilities.cs" />
-    <Compile Include="Utilities\ReflectionHandler.cs" />
+    <Compile Include="Utilities\Extensions\ModUtilities.cs" />
+    <Compile Include="Utilities\Extensions\CodeExtensions.cs" />
     <Compile Include="Utilities\Variable.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

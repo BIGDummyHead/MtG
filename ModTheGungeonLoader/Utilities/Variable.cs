@@ -32,6 +32,8 @@ namespace Gungeon.Utilities
         private FieldInfo _field;
         private PropertyInfo _prop;
 
+        /// <exception cref="Exception"/>
+        /// <exception cref="ArgumentNullException"/>
         internal Variable(object instance, Type own, string name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -40,12 +42,12 @@ namespace Gungeon.Utilities
 
             MemberInfo tmp;
 
-            if ((tmp = Owner.GetField(name, ReflectionHandler.All)) != null)
+            if ((tmp = Owner.GetField(name, CodeExtensions.All)) != null)
             {
                 _field = tmp as FieldInfo;
                 IsField = true;
             }
-            else if ((tmp = Owner.GetProperty(name, ReflectionHandler.All)) != null)
+            else if ((tmp = Owner.GetProperty(name, CodeExtensions.All)) != null)
             {
                 _prop = tmp as PropertyInfo;
                 IsField = false;
@@ -80,6 +82,7 @@ namespace Gungeon.Utilities
         /// Set the value of your field or property
         /// </summary>
         /// <param name="newVal"></param>
+        /// <exception cref="Exception"/>
         public void SetValue(object newVal)
         {
             if (IsField)
