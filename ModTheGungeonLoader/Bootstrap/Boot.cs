@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Gungeon.Debug;
+using Gungeon.Utilities;
 
 namespace Gungeon.Bootstrap
 {
@@ -30,7 +31,7 @@ namespace Gungeon.Bootstrap
                 {
                     var plug = Assembly.LoadFrom(file);
 
-                    var plugs = plug.GetTypes().Where(x => x.BaseType == typeof(Plugin) && !x.IsAbstract && x.GetConstructor(new Type[0]) != null);
+                    var plugs = plug.GetTypes().Where(x => x.Inherits(typeof(Plugin)) && !x.IsAbstract && x.GetConstructor(new Type[0]) != null);
 
                     foreach (var item in plugs)
                     {

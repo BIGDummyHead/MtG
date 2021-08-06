@@ -1,5 +1,6 @@
 ﻿using Gungeon.Debug;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 namespace Gungeon.Utilities
@@ -63,7 +64,7 @@ namespace Gungeon.Utilities
 
             if (pickup == null)
             {
-                "The object you would like to pool does not exist.".LogError();
+                "The object you would like to pool does not exist.".LogInternal(Assembly.GetCallingAssembly(), Debug.Logger.LogTypes.error);
                 return null;
             }
 

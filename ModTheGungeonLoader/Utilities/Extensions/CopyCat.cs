@@ -1,9 +1,6 @@
 ﻿using Gungeon.Debug;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace Gungeon.Utilities
 {
@@ -65,7 +62,7 @@ namespace Gungeon.Utilities
 
             var c = b.GetConstructor(GetConstArgs(constructorArgs));
 
-            if(c == null)
+            if (c == null)
             {
                 "Constructor does not exist".LogError();
                 return default;

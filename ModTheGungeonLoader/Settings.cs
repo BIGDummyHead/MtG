@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Gungeon.Debug;
+using System;
 using System.IO;
+using System.Reflection;
 using UnityEngine;
 
 namespace Gungeon
@@ -49,7 +51,7 @@ namespace Gungeon
 
             if (instance == null)
             {
-                Debug.Logger.LogError("Instance cannot be null when serializing DATA : Error at - Settings.Write(string, T)");
+                "Instance cannot be null when serializing DATA : Error at - Settings.Write(string, T)".LogInternal(Assembly.GetCallingAssembly(), Debug.Logger.LogTypes.error);
                 return;
             }
 

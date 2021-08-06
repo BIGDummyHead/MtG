@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using Gungeon.Utilities;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -137,7 +138,7 @@ namespace Gungeon.Bootstrap
                         try
                         {
                             Assembly assem = Assembly.LoadFrom(file);
-                            var mods = assem.GetTypes().Where(x => x.BaseType == typeof(Mod) && x.GetConstructor(new Type[0]) != null && !x.IsAbstract);
+                            var mods = assem.GetTypes().Where(x => x.Inherits(typeof(Mod)) && x.GetConstructor(new Type[0]) != null && !x.IsAbstract);
 
                             foreach (Type mod in mods)
                             {
@@ -149,9 +150,14 @@ namespace Gungeon.Bootstrap
                                 else
                                 {
                                     var instance = Activator.CreateInstance(mod) as Mod;
+
+                                    infoOnMod.Push(true);
+
                                     Console.ForegroundColor = infoOnMod.WriteColor;
-                                    Console.WriteLine(infoOnMod.Format());
-                                    Console.ResetColor();
+                                    Console.WriteLine(infoOnMod.ToString());
+
+                                    infoOnMod.Push(false);
+
                                     string addName = $"{infoOnMod.Name}_{LoadedMods.Count + 1}";
                                     LoadedMods.Add(addName, new Pack
                                     {

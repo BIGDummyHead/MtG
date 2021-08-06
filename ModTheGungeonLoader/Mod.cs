@@ -74,9 +74,10 @@ namespace Gungeon
             /// </summary>
             public ConsoleColor WriteColor { get; private set; }
 
-            internal string Format()
+            internal void Push(bool down)
             {
-                return $"=================================\r\n\r\n{ToString()}\r\n\r\n=================================";
+                Console.ResetColor();
+                Console.WriteLine(down ? "=================================\r\n" : "\r\n=================================");
             }
 
             /// <summary>

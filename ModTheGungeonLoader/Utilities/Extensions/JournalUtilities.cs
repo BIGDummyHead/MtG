@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Gungeon.Utilities
@@ -159,14 +160,14 @@ namespace Gungeon.Utilities
         /// <param name="value">Value</param>
         public static void AddTo(Table table, string key, string value)
         {
-            var _table = GetTable(table);
-
             if (KeyNull(key))
                 return;
 
+            var _table = GetTable(table);
+
             if (_table.ContainsKey(key))
             {
-                $"'{key}' is already present in {table}".LogError();
+                $"'{key}' is already present in {table}".LogInternal(System.Reflection.Assembly.GetCallingAssembly(), Logger.LogTypes.error);
                 return;
             }
 
@@ -187,7 +188,7 @@ namespace Gungeon.Utilities
 
             if (table == null)
             {
-                $"'{key}' is not present in Table".LogError();
+                $"'{key}' is not present in Table".LogInternal(Assembly.GetCallingAssembly(), Logger.LogTypes.error);
                 return;
             }
 

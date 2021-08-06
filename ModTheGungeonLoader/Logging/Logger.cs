@@ -45,7 +45,34 @@ namespace Gungeon.Debug
         /// <param name="msg">The message you would like to print</param>
         public static void LogError(this object msg)
         {
-            LogUnformatted(Format("error", msg?.ToString()), $"{Assembly.GetCallingAssembly().GetName().Name}.dll",ConsoleColor.Red);
+            LogUnformatted(Format("error", msg?.ToString()), $"{Assembly.GetCallingAssembly().GetName().Name}.dll", ConsoleColor.Red);
+        }
+
+        internal static void LogInternal(this object msg, Assembly calling, LogTypes log = LogTypes.log)
+        {
+            LogUnformatted(Format(log.ToString(), msg?.ToString()), $"{calling.GetName().Name}.dll", GetLogColor(log));
+        }
+
+        internal enum LogTypes
+        {
+            error, 
+            log,
+            warning
+        }
+
+        static internal ConsoleColor GetLogColor(LogTypes log)
+        {
+            switch (log)
+            {
+                case LogTypes.error:
+                    return ConsoleColor.Red;
+                case LogTypes.log:
+                    return ConsoleColor.White;
+                case LogTypes.warning:
+                    return ConsoleColor.Yellow;
+                default:
+                    return ConsoleColor.White;
+            }
         }
 
         /// <summary>
