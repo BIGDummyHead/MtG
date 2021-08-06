@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gungeon.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -38,7 +39,7 @@ namespace Gungeon
                 Developer = developer ?? string.Empty;
                 Version = version ?? string.Empty;
 
-                bool z = TryParse(colorName, true, out ConsoleColor color);
+                bool z = CodeExtensions.TryParse(colorName, true, out ConsoleColor color);
 
                 WriteColor = z ? color : ConsoleColor.White;
             }
