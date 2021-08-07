@@ -106,6 +106,20 @@ namespace Gungeon.Events
         /// <param name="__result"/>
         /// <param name="isPlayer"/>
         public delegate void OnGunAttack(Gun gun, bool isPlayer, ref Gun.AttackResult __result, ref ProjectileData overrideData, ref GameObject overrideBullet);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gun"></param>
+        /// <param name="dropHeight"></param>
+        /// <param name="droppedItem"></param>
+        public delegate void OnGunDrop(Gun gun, ref float dropHeight, DebrisObject droppedItem);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="player"></param>
+        /// <param name="droppedItem"></param>
+        public delegate void OnPassiveDrop(PassiveItem item, PlayerController player, DebrisObject droppedItem);
     }
 
 

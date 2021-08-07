@@ -518,13 +518,22 @@ namespace Gungeon.Utilities
         public static event GungeonDelegates.OnEnemyDied AfterEnemyDied;
 
         /// <summary>
-        /// Before any object in game is picked up by a player
+        /// Before any passive item in game is picked up by a player
         /// </summary>
         public static event GungeonDelegates.OnPickup<PassiveItem> BeforePassivePickup;
         /// <summary>
-        /// After any object in game is picked up by a player
+        /// After any passive item in game is picked up by a player
         /// </summary>
         public static event GungeonDelegates.OnPickup<PassiveItem> AfterPassivePickup;
+
+        /// <summary>
+        /// Before any gun is picked up
+        /// </summary>
+        public static event GungeonDelegates.OnPickup<Gun> BeforeGunPickup;
+        /// <summary>
+        /// After any gun is picked up
+        /// </summary>
+        public static event GungeonDelegates.OnPickup<Gun> AfterGunPickup;
 
         /// <summary>
         /// Before a gun attacks, from any source.
@@ -535,6 +544,26 @@ namespace Gungeon.Utilities
         /// After a gun attacks, from any source.
         /// </summary>
         public static event GungeonDelegates.OnGunAttack AfterGunAttack;
+
+        /// <summary>
+        /// Before a passive is dropped
+        /// </summary>
+        public static event GungeonDelegates.OnPassiveDrop BeforePassiveDrop;
+        /// <summary>
+        /// After a passive is dropped
+        /// </summary>
+        public static event GungeonDelegates.OnPassiveDrop AfterPassiveDrop;
+
+        /// <summary>
+        /// Before a gun is dropped
+        /// </summary>
+        public static event GungeonDelegates.OnGunDrop BeforeGunDrop;
+        /// <summary>
+        /// After a gun is dropped
+        /// </summary>
+        public static event GungeonDelegates.OnGunDrop AfterGunDrop;
+
+
 
 
         [HarmonyPatch(typeof(Projectile), "HandleDestruction", typeof(CollisionData), typeof(bool), typeof(bool))]
@@ -683,7 +712,7 @@ namespace Gungeon.Utilities
         }
 
         [HarmonyPatch(typeof(PassiveItem), "Pickup", typeof(PlayerController))]
-        internal class _onObjectPickup
+        internal class _onPassivePicked
         {
             public static void Prefix(PassiveItem __instance, PlayerController player)
             {
@@ -693,6 +722,48 @@ namespace Gungeon.Utilities
             public static void Postfix(PassiveItem __instance, PlayerController player)
             {
                 AfterPassivePickup?.Invoke(__instance, player);
+            }
+        }
+
+        [HarmonyPatch(typeof(Gun), "Pickup", typeof(PlayerController))]
+        internal class _onGunPicked
+        {
+            public static void Prefix(Gun __instance, PlayerController player)
+            {
+                BeforeGunPickup?.Invoke(__instance, player);
+            }
+
+            public static void Postfix(Gun __instance, PlayerController player)
+            {
+                AfterGunPickup?.Invoke(__instance, player);
+            }
+        }
+
+        [HarmonyPatch(typeof(Gun), nameof(Gun.DropGun), typeof(float))]
+        internal class _onGunDrop
+        {
+            public static void Prefix(Gun __instance, DebrisObject __result, ref float dropHeight)
+            {
+                BeforeGunDrop?.Invoke(__instance, ref dropHeight, __result);
+            }
+
+            public static void Postfix(Gun __instance, DebrisObject __result, ref float dropHeight)
+            {
+                AfterGunDrop?.Invoke(__instance, ref dropHeight, __result);
+            }
+        }
+
+        [HarmonyPatch(typeof(PassiveItem), nameof(PassiveItem.Drop), typeof(PlayerController))]
+        internal class _onPassiveDrop
+        {
+            public static void Prefix(PassiveItem __instance, DebrisObject __result, PlayerController player)
+            {
+                BeforePassiveDrop?.Invoke(__instance, player, __result);
+            }
+
+            public static void Postfix(PassiveItem __instance, DebrisObject __result, PlayerController player)
+            {
+                AfterPassiveDrop?.Invoke(__instance, player, __result);
             }
         }
 
