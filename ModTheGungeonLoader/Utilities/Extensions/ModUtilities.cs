@@ -144,7 +144,7 @@ namespace Gungeon.Utilities
         {
             Rect rect = new Rect(pos, new Vector2(texture.width, texture.height));
 
-            return Sprite.Create(texture, rect,pivot );
+            return Sprite.Create(texture, rect, pivot);
         }
 
         /// <summary>
@@ -297,7 +297,7 @@ namespace Gungeon.Utilities
                 List<PassiveItem> passives = new List<PassiveItem>((IEnumerable<PassiveItem>)AllObjects.Where(x => x is PassiveItem));
 
                 int pick = new System.Random().Next(0, passives.Count);
-                
+
                 return passives[pick];
             }
         }
@@ -311,7 +311,7 @@ namespace Gungeon.Utilities
         /// <param name="value">The value to apply to your <paramref name="stat"/></param>
         public static void ChangeStat(PlayerController player, PlayerStats.StatType statType, StatChange stat, float value)
         {
-            if(player is null)
+            if (player is null)
             {
                 "Player may not be null when changing stat.".LogInternal(Assembly.GetCallingAssembly(), Debug.Logger.LogTypes.error);
                 return;
@@ -319,7 +319,7 @@ namespace Gungeon.Utilities
 
             PlayerStats stats = player.stats;
 
-            if(stats is null)
+            if (stats is null)
             {
                 "Stats of player may not be null when changing stat.".LogInternal(Assembly.GetCallingAssembly(), Debug.Logger.LogTypes.error);
                 return;
@@ -373,7 +373,7 @@ namespace Gungeon.Utilities
         {
             System.Random ran = new System.Random();
             return PickupObjectDatabase.GetRandomPassiveOfQualities(ran, excludeIDs, qualities);
-           
+
         }
 
 
@@ -564,7 +564,7 @@ namespace Gungeon.Utilities
 
             public static void Postfix(Projectile __instance, bool __state)
             {
-               AfterMoving?.Invoke(__instance, __state);
+                AfterMoving?.Invoke(__instance, __state);
             }
         }
 
@@ -667,7 +667,7 @@ namespace Gungeon.Utilities
                 AfterPlayerDamaged?.Invoke(__instance, resultValue, maxValue, damageTypes, damageCategory, damageDirection);
             }
         }
-        
+
         [HarmonyPatch(typeof(AIActor), "PreDeath", typeof(Vector2))]
         internal class _enemyDeath
         {

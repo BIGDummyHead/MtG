@@ -92,7 +92,7 @@ namespace Gungeon.Utilities
         /// <param name="weight"></param>
         /// <param name="prerequisites"></param>
         /// <returns></returns>
-       public static WeightedGameObject ToWeighted(PickupObject pickup, float weight, DungeonPrerequisite[] prerequisites)
+        public static WeightedGameObject ToWeighted(PickupObject pickup, float weight, DungeonPrerequisite[] prerequisites)
         {
             return new WeightedGameObject()
             {

@@ -1,7 +1,5 @@
 ﻿using Gungeon.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Gungeon
 {
@@ -44,7 +42,7 @@ namespace Gungeon
                 WriteColor = z ? color : ConsoleColor.White;
             }
 
-            
+
 
             /// <summary>
             /// Name of the mod

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Gungeon.Debug;
+using Gungeon.Utilities;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Gungeon.Debug;
-using Gungeon.Utilities;
 
 namespace Gungeon.Bootstrap
 {

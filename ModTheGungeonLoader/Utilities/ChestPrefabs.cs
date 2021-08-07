@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Gungeon.Utilities
+﻿namespace Gungeon.Utilities
 {
     /// <summary>
     /// A collection of chest in game.

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Reflection;
 
 namespace Gungeon.Debug
@@ -55,12 +54,12 @@ namespace Gungeon.Debug
 
         internal enum LogTypes
         {
-            error, 
+            error,
             log,
             warning
         }
 
-        static internal ConsoleColor GetLogColor(LogTypes log)
+        internal static ConsoleColor GetLogColor(LogTypes log)
         {
             switch (log)
             {
@@ -92,7 +91,7 @@ namespace Gungeon.Debug
             Console.Write(dll);
             Console.ResetColor();
             Console.Write("] | ");
-            
+
             Console.ForegroundColor = clr;
             Console.WriteLine(msg);
             Console.ResetColor();
