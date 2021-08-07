@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Gungeon.Utilities
@@ -37,6 +38,34 @@ namespace Gungeon.Utilities
         {
             return new Method(instance?.GetType(), name, typeArgs, instance);
         }
+
+        /// <summary>
+        /// Check if a type inherits an interface
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="inter"></param>
+        /// <returns></returns>
+        public static bool HasInterface(this Type type, Type inter)
+        {
+            if (!inter.IsInterface)
+                throw new Exception("Must pass interface to check if type has interface.");
+
+            Type t = type.GetInterfaces().FirstOrDefault(x => x == inter);
+
+            return t != default;
+        }
+
+        /// <summary>
+        /// Check if a type inherits an interface
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool HasInterface<T>(this Type type)
+        {
+            return type.HasInterface(typeof(T));
+        }
+
 
         /// <summary>
         /// Reflect a static method; Public, Internal, and or Private.

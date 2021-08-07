@@ -138,7 +138,7 @@ namespace Gungeon.Bootstrap
                         try
                         {
                             Assembly assem = Assembly.LoadFrom(file);
-                            var mods = assem.GetTypes().Where(x => x.Inherits(typeof(IMod)) && x.GetConstructor(new Type[0]) != null && !x.IsAbstract);
+                            var mods = assem.GetTypes().Where(x => x.HasInterface<IMod>() && x.GetConstructor(new Type[0]) != null && !x.IsAbstract);
 
                             foreach (Type mod in mods)
                             {
