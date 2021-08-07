@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Networking;
 using Object = UnityEngine.Object;
@@ -272,6 +273,21 @@ namespace Gungeon.Utilities
         public static Gun RandomGun => PickupObjectDatabase.GetRandomGun();
 
         /// <summary>
+        /// Is the player in a Gungeon?
+        /// </summary>
+        public static bool IsInGungeon
+        {
+            get
+            {
+                if (CurrentPlayer == null || CurrentPlayer?.CurrentRoom == null)
+                    return false;
+
+                string roomName = CurrentPlayer.CurrentRoom.GetRoomName() ?? string.Empty;
+                return !roomName.StartsWith("Gungeon_Foyer") || !roomName.StartsWith("Tutorial");
+            }
+        }
+
+        /// <summary>
         /// Get a random passive.
         /// </summary>
         public static PassiveItem RandomPassive
@@ -283,6 +299,55 @@ namespace Gungeon.Utilities
                 int pick = new System.Random().Next(0, passives.Count);
                 
                 return passives[pick];
+            }
+        }
+
+        /// <summary>
+        /// Changes a base stat, uses <see cref="PlayerStats.StatType"/> and <seealso cref="StatChange"/> to calculate change in stats value
+        /// </summary>
+        /// <param name="player">The player's stats you want to change</param>
+        /// <param name="statType">The type of stat you want to change</param>
+        /// <param name="stat">The stat change effect</param>
+        /// <param name="value">The value to apply to your <paramref name="stat"/></param>
+        public static void ChangeStat(PlayerController player, PlayerStats.StatType statType, StatChange stat, float value)
+        {
+            if(player is null)
+            {
+                "Player may not be null when changing stat.".LogInternal(Assembly.GetCallingAssembly(), Debug.Logger.LogTypes.error);
+                return;
+            }
+
+            PlayerStats stats = player.stats;
+
+            if(stats is null)
+            {
+                "Stats of player may not be null when changing stat.".LogInternal(Assembly.GetCallingAssembly(), Debug.Logger.LogTypes.error);
+                return;
+            }
+
+            int ent = (int)statType;
+
+            float changed = GetStatC(stat, stats.BaseStatValues[ent], value);
+
+            stats.SetBaseStatValue(statType, changed, player);
+        }
+
+        private static float GetStatC(StatChange change, float existing, float userChange)
+        {
+            switch (change)
+            {
+                case StatChange.Add:
+                    return existing + userChange;
+                case StatChange.Mult:
+                    return existing * userChange;
+                case StatChange.Sub:
+                    return existing - userChange;
+                case StatChange.Div:
+                    return existing / userChange;
+                case StatChange.Total:
+                    return userChange;
+                default:
+                    return userChange;
             }
         }
 
@@ -461,6 +526,17 @@ namespace Gungeon.Utilities
         /// </summary>
         public static event GungeonDelegates.OnPickup<PassiveItem> AfterPassivePickup;
 
+        /// <summary>
+        /// Before a gun attacks, from any source.
+        /// </summary>
+        public static event GungeonDelegates.OnGunAttack BeforeGunAttack;
+
+        /// <summary>
+        /// After a gun attacks, from any source.
+        /// </summary>
+        public static event GungeonDelegates.OnGunAttack AfterGunAttack;
+
+
         [HarmonyPatch(typeof(Projectile), "HandleDestruction", typeof(CollisionData), typeof(bool), typeof(bool))]
         internal class _projHit
         {
@@ -617,6 +693,20 @@ namespace Gungeon.Utilities
             public static void Postfix(PassiveItem __instance, PlayerController player)
             {
                 AfterPassivePickup?.Invoke(__instance, player);
+            }
+        }
+
+        [HarmonyPatch(typeof(Gun), "Attack", typeof(ProjectileData), typeof(GameObject))]
+        internal class _onFire
+        {
+            public static void Prefix(Gun __instance, ref Gun.AttackResult __result, ref ProjectileData overrideProjectileData, ref GameObject overrideBulletObject)
+            {
+                BeforeGunAttack?.Invoke(__instance, __instance.CurrentOwner is PlayerController, ref __result, ref overrideProjectileData, ref overrideBulletObject);
+            }
+
+            public static void Postfix(Gun __instance, ref Gun.AttackResult __result, ref ProjectileData overrideProjectileData, ref GameObject overrideBulletObject)
+            {
+                AfterGunAttack?.Invoke(__instance, __instance.CurrentOwner is PlayerController, ref __result, ref overrideProjectileData, ref overrideBulletObject);
             }
         }
     }

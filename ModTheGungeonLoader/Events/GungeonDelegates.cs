@@ -96,6 +96,16 @@ namespace Gungeon.Events
         /// <param name="obj"></param>
         /// <param name="pickUpUser"></param>
         public delegate void OnPickup<T>(T obj, PlayerController pickUpUser) where T : PickupObject;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gun"></param>
+        /// <param name="overrideData"></param>
+        /// <param name="overrideBullet"></param>
+        /// <param name="__result"/>
+        /// <param name="isPlayer"/>
+        public delegate void OnGunAttack(Gun gun, bool isPlayer, ref Gun.AttackResult __result, ref ProjectileData overrideData, ref GameObject overrideBullet);
     }
 
 
