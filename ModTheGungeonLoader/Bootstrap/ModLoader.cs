@@ -75,8 +75,8 @@ namespace Gungeon.Bootstrap
         public class Pack
         {
             public string key;
-            public Mod mod;
-            public Mod.Info info;
+            public IMod mod;
+            public Info info;
         }
 
         /// <summary>
@@ -134,22 +134,22 @@ namespace Gungeon.Bootstrap
 
                     if (ext.Equals(".dll"))
                     {
-                        Mod.Info infoOnMod = null;
+                        Info infoOnMod = null;
                         try
                         {
                             Assembly assem = Assembly.LoadFrom(file);
-                            var mods = assem.GetTypes().Where(x => x.Inherits(typeof(Mod)) && x.GetConstructor(new Type[0]) != null && !x.IsAbstract);
+                            var mods = assem.GetTypes().Where(x => x.Inherits(typeof(IMod)) && x.GetConstructor(new Type[0]) != null && !x.IsAbstract);
 
                             foreach (Type mod in mods)
                             {
-                                infoOnMod = GetCustomAttribute<Mod.Info>(mod) ?? CreateInfo(mod, LoadedMods.Count + 1);
+                                infoOnMod = GetCustomAttribute<Info>(mod) ?? CreateInfo(mod, LoadedMods.Count + 1);
                                 if (LoadedMods.ContainsKey(infoOnMod.Name))
                                 {
                                     Debug.Logger.LogWarning($"Mod has already been loaded : {infoOnMod.Name}");
                                 }
                                 else
                                 {
-                                    var instance = Activator.CreateInstance(mod) as Mod;
+                                    var instance = Activator.CreateInstance(mod) as IMod;
 
                                     infoOnMod.Push(true);
 
@@ -183,9 +183,9 @@ namespace Gungeon.Bootstrap
             }
         }
 
-        public Mod.Info CreateInfo(Type type, int modNumber)
+        public Info CreateInfo(Type type, int modNumber)
         {
-            return new Mod.Info($"{type.Name}_{modNumber}", "No description is provided", "Unknown", "Unknown");
+            return new Info($"{type.Name}_{modNumber}", "No description is provided", "Unknown", "Unknown");
         }
     }
 
