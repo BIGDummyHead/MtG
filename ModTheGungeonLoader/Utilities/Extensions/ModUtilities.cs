@@ -3,6 +3,7 @@ using Gungeon.Debug;
 using Gungeon.Events;
 using HarmonyLib;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using UnityEngine;
@@ -159,16 +160,47 @@ namespace Gungeon.Utilities
         }
 
         /// <summary>
+        /// Convert from <see cref="Vector3"/> to <seealso cref="IntVector2"/>
+        /// </summary>
+        /// <param name="from"></param>
+        /// <returns></returns>
+        public static IntVector2 Convert(this Vector3 from)
+        {
+            return ((Vector2)from).Convert();
+        }
+
+        /// <summary>
         /// Create a chest at a position.
         /// </summary>
         /// <param name="prefab"><see cref="ChestPrefabs"/></param>
         /// <param name="vec">Position at which to spawn the chest, <see cref="Convert(Vector2)"/></param>
         /// <param name="target">Can be left null, target room to spawn chest</param>
         /// <param name="forceMimicChest">Force this chest to be a mimic?</param>
+        /// <param name="lootTables">Loot tables to include.</param>
+        /// <param name="includeThisTable">Include the base loot table with the chest?</param>
         /// <returns></returns>
-        public static Chest CreateChest(Chest prefab, IntVector2 vec, RoomHandler target = null, bool forceMimicChest = false)
+        public static Chest CreateChest(Chest prefab, IntVector2 vec, RoomHandler target = null, bool forceMimicChest = false, bool includeThisTable = true, params GenericLootTable[] lootTables)
         {
             Chest spawned = (target == null) ? Chest.Spawn(prefab, vec) : Chest.Spawn(prefab, vec, target);
+
+            List<GenericLootTable> tables = new List<GenericLootTable>();
+
+            if (includeThisTable && spawned.lootTable != null)
+                tables.Add(spawned.lootTable.lootTable);
+
+            if (lootTables.Length > 0)
+                tables.AddRange(tables);
+
+            if (lootTables.Length > 0)
+            {
+                if (!includeThisTable)
+                {
+                    spawned.lootTable.lootTable = lootTables[0];
+                    tables.RemoveAt(0);
+                }
+
+                spawned.lootTable.overrideItemLootTables = tables;
+            }
 
             if (forceMimicChest)
             {
@@ -187,6 +219,8 @@ namespace Gungeon.Utilities
         {
             LootEngine.SpawnCurrencyManual(position, amount);
         }
+
+
 
         /// <summary>
         /// Spawn a heart at a position
@@ -443,20 +477,29 @@ namespace Gungeon.Utilities
         /// <summary>
         /// Before any passive item in game is picked up by a player
         /// </summary>
-        public static event GungeonDelegates.OnPickup<PassiveItem> BeforePassivePickup;
+        public static event GungeonDelegates.OnItemPickup<PassiveItem> BeforePassivePickup;
         /// <summary>
         /// After any passive item in game is picked up by a player
         /// </summary>
-        public static event GungeonDelegates.OnPickup<PassiveItem> AfterPassivePickup;
+        public static event GungeonDelegates.OnItemPickup<PassiveItem> AfterPassivePickup;
 
         /// <summary>
         /// Before any gun is picked up
         /// </summary>
-        public static event GungeonDelegates.OnPickup<Gun> BeforeGunPickup;
+        public static event GungeonDelegates.OnItemPickup<Gun> BeforeGunPickup;
         /// <summary>
         /// After any gun is picked up
         /// </summary>
-        public static event GungeonDelegates.OnPickup<Gun> AfterGunPickup;
+        public static event GungeonDelegates.OnItemPickup<Gun> AfterGunPickup;
+
+        /// <summary>
+        /// Before any active is picked up.
+        /// </summary>
+        public static event GungeonDelegates.OnItemPickup<PlayerItem> BeforeActivePickup;
+        /// <summary>
+        /// After any active is picked up.
+        /// </summary>
+        public static event GungeonDelegates.OnItemPickup<PlayerItem> AfterActivePickup;
 
         /// <summary>
         /// Before a gun attacks, from any source.
@@ -486,7 +529,28 @@ namespace Gungeon.Utilities
         /// </summary>
         public static event GungeonDelegates.OnGunDrop AfterGunDrop;
 
+        /// <summary>
+        /// Before an active item is dropped
+        /// </summary>
+        public static event GungeonDelegates.OnActiveDrop BeforeActiveDrop;
+        /// <summary>
+        /// After an active item is dropped
+        /// </summary>
+        public static event GungeonDelegates.OnActiveDrop AfterActiveDrop;
 
+        [HarmonyPatch(typeof(PlayerItem), "Pickup", typeof(PlayerItem))]
+        internal class _playerItemPick
+        {
+            public static void Prefix(PlayerItem __instance, PlayerController player)
+            {
+                BeforeActivePickup?.Invoke(__instance, player);
+            }
+
+            public static void Postfix(PlayerItem __instance, PlayerController player)
+            {
+                AfterActivePickup?.Invoke(__instance, player);
+            }
+        }
 
 
         [HarmonyPatch(typeof(Projectile), "HandleDestruction", typeof(CollisionData), typeof(bool), typeof(bool))]
@@ -673,6 +737,20 @@ namespace Gungeon.Utilities
             public static void Postfix(Gun __instance, DebrisObject __result, ref float dropHeight)
             {
                 AfterGunDrop?.Invoke(__instance, ref dropHeight, __result);
+            }
+        }
+
+        [HarmonyPatch(typeof(PlayerItem), "Drop", typeof(PlayerController), typeof(float))]
+        internal class _playerItemDrop
+        {
+            public static void Prefix(PlayerItem __instance, DebrisObject __result, PlayerController player, ref float overrideForce)
+            {
+                BeforeActiveDrop?.Invoke(__instance, player, ref overrideForce, __result);
+            }
+
+            public static void Postfix(PlayerItem __instance, DebrisObject __result, PlayerController player, ref float overrideForce)
+            {
+                AfterActiveDrop?.Invoke(__instance, player, ref overrideForce, __result);
             }
         }
 

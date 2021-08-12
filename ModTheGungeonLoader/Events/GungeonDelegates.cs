@@ -93,9 +93,32 @@ namespace Gungeon.Events
         /// For objects that can be picked up.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="obj"></param>
+        /// <param name="item"></param>
         /// <param name="pickUpUser"></param>
-        public delegate void OnPickup<T>(T obj, PlayerController pickUpUser) where T : PickupObject;
+        public delegate void OnItemPickup<T>(T item, PlayerController pickUpUser) where T : PickupObject;
+
+        /// <summary>
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="player"></param>
+        /// <param name="droppedItem"></param>
+        public delegate void OnPassiveDrop(PassiveItem item, PlayerController player, DebrisObject droppedItem);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="gun"></param>
+        /// <param name="dropped"></param>
+        /// <param name="dropHeight"></param>
+        public delegate void OnGunDrop(Gun gun, ref float dropHeight, DebrisObject dropped);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="player"></param>
+        /// <param name="dropped"></param>
+        /// <param name="overrideForce"></param>
+        public delegate void OnActiveDrop(PlayerItem item, PlayerController player, ref float overrideForce, DebrisObject dropped);
 
         /// <summary>
         /// 
@@ -103,23 +126,10 @@ namespace Gungeon.Events
         /// <param name="gun"></param>
         /// <param name="overrideData"></param>
         /// <param name="overrideBullet"></param>
-        /// <param name="__result"/>
+        /// <param name="atkResult"/>
         /// <param name="isPlayer"/>
-        public delegate void OnGunAttack(Gun gun, bool isPlayer, ref Gun.AttackResult __result, ref ProjectileData overrideData, ref GameObject overrideBullet);
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gun"></param>
-        /// <param name="dropHeight"></param>
-        /// <param name="droppedItem"></param>
-        public delegate void OnGunDrop(Gun gun, ref float dropHeight, DebrisObject droppedItem);
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="item"></param>
-        /// <param name="player"></param>
-        /// <param name="droppedItem"></param>
-        public delegate void OnPassiveDrop(PassiveItem item, PlayerController player, DebrisObject droppedItem);
+        public delegate void OnGunAttack(Gun gun, bool isPlayer, ref Gun.AttackResult atkResult, ref ProjectileData overrideData, ref GameObject overrideBullet);
+
     }
 
 
