@@ -86,7 +86,7 @@
     <Compile Include="Bootstrap\DefaultConsole.cs" />
     <Compile Include="Bootstrap\ILoader.cs" />
     <Compile Include="Bootstrap\ModLoader.cs" />
-    <Compile Include="Bootstrap\Plugin.cs" />
+    <Compile Include="Bootstrap\IPlugin.cs" />
     <Compile Include="Events\GameEvents.cs" />
     <Compile Include="Events\GungeonDelegates.cs" />
     <Compile Include="Logging\Logger.cs" />
