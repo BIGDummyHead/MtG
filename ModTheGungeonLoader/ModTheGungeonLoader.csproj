@@ -97,7 +97,7 @@
     <Compile Include="Utilities\Builder\BasePickupModifier.cs" />
     <Compile Include="Utilities\Builder\LootTableBuilder.cs" />
     <Compile Include="Utilities\ChestPrefabs.cs" />
-    <Compile Include="Utilities\Extensions\EnemyID.cs" />
+    <Compile Include="Utilities\Extensions\EnemyIDs.cs" />
     <Compile Include="Utilities\Extensions\CopyCat.cs" />
     <Compile Include="Utilities\Extensions\PickupIDs.cs" />
     <Compile Include="Utilities\Internal\ImplicitStringCollection.cs" />

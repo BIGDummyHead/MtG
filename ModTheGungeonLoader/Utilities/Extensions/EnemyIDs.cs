@@ -7,7 +7,7 @@ namespace Gungeon.Utilities
     /// <summary>
     /// Every single Enemy GUID to spawn.
     /// </summary>
-    public static class EnemyID
+    public static class EnemyIDs
     {
         /// <summary>
         /// Spawn an enemy by an existing prefab.

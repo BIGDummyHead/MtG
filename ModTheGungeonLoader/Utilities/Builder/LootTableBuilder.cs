@@ -80,11 +80,11 @@ namespace Gungeon.Utilities
         /// <returns></returns>
         public WeightedGameObject PoolItem(WeightedGameObject pickup)
         {
-            if(pickup == null)
+            if (pickup == null)
             {
                 "The object you would like to pool is null".LogInternal(Assembly.GetCallingAssembly(), Debug.Logger.LogTypes.error);
                 return null;
-            }    
+            }
 
             FinalTable.defaultItemDrops.Add(pickup);
             return pickup;

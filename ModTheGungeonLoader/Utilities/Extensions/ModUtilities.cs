@@ -3,9 +3,7 @@ using Gungeon.Debug;
 using Gungeon.Events;
 using HarmonyLib;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -231,9 +229,9 @@ namespace Gungeon.Utilities
         {
             gun.GetMethod("FinishReload", typeof(bool), typeof(bool), typeof(bool)).Invoke(isActiveGun, silent, immediate);
         }
-       
 
-        
+
+
 
         /// <summary>
         /// Is the player in a Gungeon?
@@ -250,7 +248,7 @@ namespace Gungeon.Utilities
             }
         }
 
-        
+
 
         /// <summary>
         /// Changes a base stat, uses <see cref="PlayerStats.StatType"/> and <seealso cref="StatChange"/> to calculate change in stats value
