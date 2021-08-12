@@ -62,6 +62,19 @@ namespace Gungeon.Utilities
         }
 
         /// <summary>
+        /// Get the access length of an array.
+        /// </summary>
+        /// <param name="ar"></param>
+        /// <returns></returns>
+        public static int Len(this Array ar)
+        {
+            if (ar.Length == 0)
+                return 0;
+
+            return ar.Length - 1;
+        }
+
+        /// <summary>
         /// Check if a type inherits an interface
         /// </summary>
         /// <param name="type"></param>

@@ -10,6 +10,15 @@ namespace Gungeon.Events
     public static class GameEvents
     {
         /// <summary>
+        /// The harmony patch for gungeon events.
+        /// </summary>
+        public static Harmony HarmonyPatch { get; private set; }
+        internal static void Patch()
+        {
+            new Harmony("com.Gungeon.Mods");
+        }
+
+        /// <summary>
         /// Before a player changes their gun. 
         /// </summary>
         public static event GungeonDelegates.GunChange BeforeGunChange;

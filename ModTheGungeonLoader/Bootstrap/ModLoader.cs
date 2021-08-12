@@ -1,5 +1,4 @@
 ﻿using Gungeon.Utilities;
-using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,11 +23,6 @@ namespace Gungeon.Bootstrap
             _globe = new ModLoader(mods, loader);
 
             return GetGlobal();
-        }
-
-        internal static void Patch()
-        {
-            new Harmony("com.Gungeon.Mods").PatchAll();
         }
 
         /// <summary>

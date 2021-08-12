@@ -14,7 +14,7 @@ namespace Gungeon.Bootstrap
         {
             //hey whatchu you doin ;)
             LoadPlugins();
-            ModLoader.Patch();
+            Events.GameEvents.Patch();
             ModLoader.GetGlobal().LoaderLoad();
         }
 
