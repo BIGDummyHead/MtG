@@ -40,6 +40,28 @@ namespace Gungeon.Utilities
         }
 
         /// <summary>
+        /// Get a random item from any IEnumerable item.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="ts"></param>
+        /// <param name="requirements"></param>
+        /// <returns></returns>
+        public static T Random<T>(this IEnumerable<T> ts, Func<T, bool> requirements = null)
+        {
+            T[] ar = default;
+
+            if (requirements != null)
+                ar = ts.Where(requirements).ToArray();
+            else
+                ar = ts.ToArray();
+
+            int ray = UnityEngine.Random.Range(0, ar.Length - 1);
+
+            //get it ;)
+            return ar[ray];
+        }
+
+        /// <summary>
         /// Check if a type inherits an interface
         /// </summary>
         /// <param name="type"></param>

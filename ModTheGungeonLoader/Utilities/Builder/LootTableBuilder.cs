@@ -27,7 +27,7 @@ namespace Gungeon.Utilities
         }
 
         /// <summary>
-        /// Pool an item from <see cref="ModUtilities.GetItem(string, bool)"/>
+        /// Pool an item from <see cref="PickupIDs.GetItem(string, bool)"/>
         /// </summary>
         /// <param name="name">The display name</param>
         /// <param name="encounterName">Find by encounter name?</param>
@@ -36,7 +36,7 @@ namespace Gungeon.Utilities
         /// <returns>The item added to the pool</returns>
         public WeightedGameObject PoolItem(string name, bool encounterName = false, float weight = 1, params DungeonPrerequisite[] prerequisites)
         {
-            PickupObject pickup = ModUtilities.GetItem(name, encounterName);
+            PickupObject pickup = PickupIDs.GetItem(name, encounterName);
 
             if (pickup == null)
             {
@@ -52,7 +52,7 @@ namespace Gungeon.Utilities
         }
 
         /// <summary>
-        /// Pool an item from <see cref="ModUtilities.GetItem(int)"/>
+        /// Pool an item from <see cref="PickupIDs.GetItem(int)"/>
         /// </summary>
         /// <param name="id">The object ID</param>
         /// <param name="weight">Object's weight in table</param>
@@ -60,7 +60,7 @@ namespace Gungeon.Utilities
         /// <returns>The item added to the pool</returns>
         public WeightedGameObject PoolItem(int id, float weight = 1, params DungeonPrerequisite[] prerequisites)
         {
-            PickupObject pickup = ModUtilities.GetItem(id);
+            PickupObject pickup = PickupIDs.GetItem(id);
 
             if (pickup == null)
             {
@@ -71,6 +71,43 @@ namespace Gungeon.Utilities
             WeightedGameObject o = ToWeighted(pickup, weight, prerequisites);
             FinalTable.defaultItemDrops.Add(o);
             return o;
+        }
+
+        /// <summary>
+        /// Pool <see cref="WeightedGameObject"/>
+        /// </summary>
+        /// <param name="pickup"></param>
+        /// <returns></returns>
+        public WeightedGameObject PoolItem(WeightedGameObject pickup)
+        {
+            if(pickup == null)
+            {
+                "The object you would like to pool is null".LogInternal(Assembly.GetCallingAssembly(), Debug.Logger.LogTypes.error);
+                return null;
+            }    
+
+            FinalTable.defaultItemDrops.Add(pickup);
+            return pickup;
+        }
+
+        /// <summary>
+        /// Pool <see cref="PickupObject"/>
+        /// </summary>
+        /// <param name="pickup"></param>
+        /// <param name="weight"></param>
+        /// <param name="prerequisites"></param>
+        /// <returns></returns>
+        public WeightedGameObject PoolItem(PickupObject pickup, float weight = 1, params DungeonPrerequisite[] prerequisites)
+        {
+            if (pickup == null)
+            {
+                "The object you would like to pool is null".LogInternal(Assembly.GetCallingAssembly(), Debug.Logger.LogTypes.error);
+                return null;
+            }
+
+            WeightedGameObject o = ToWeighted(pickup, weight, prerequisites);
+
+            return PoolItem(o);
         }
 
         /// <summary>
@@ -92,7 +129,7 @@ namespace Gungeon.Utilities
         /// <param name="weight"></param>
         /// <param name="prerequisites"></param>
         /// <returns></returns>
-        public static WeightedGameObject ToWeighted(PickupObject pickup, float weight, DungeonPrerequisite[] prerequisites)
+        public static WeightedGameObject ToWeighted(PickupObject pickup, float weight = 1, params DungeonPrerequisite[] prerequisites)
         {
             return new WeightedGameObject()
             {

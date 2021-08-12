@@ -231,46 +231,9 @@ namespace Gungeon.Utilities
         {
             gun.GetMethod("FinishReload", typeof(bool), typeof(bool), typeof(bool)).Invoke(isActiveGun, silent, immediate);
         }
-        /// <summary>
-        /// Get an item by name | <see cref="StringComparison.OrdinalIgnoreCase"/> is used.
-        /// </summary>
-        /// <param name="name">Item's name</param>
-        /// <param name="byDisplayName">Use display name</param>
-        /// <returns></returns>
-        public static PickupObject GetItem(string name, bool byDisplayName = false)
-        {
-            return byDisplayName ? PickupObjectDatabase.GetByEncounterName(name) : PickupObjectDatabase.GetByName(name);
-        }
+       
 
-        /// <summary>
-        /// Get an item via ID.
-        /// </summary>
-        /// <param name="id">Object ID</param>
-        /// <returns></returns>
-        public static PickupObject GetItem(int id)
-        {
-            return PickupObjectDatabase.GetById(id);
-        }
-
-        /// <summary>
-        /// Get an ID via a object.
-        /// </summary>
-        /// <param name="pickup">Object</param>
-        /// <returns></returns>
-        public static int ID(this PickupObject pickup)
-        {
-            return PickupObjectDatabase.GetId(pickup);
-        }
-
-        /// <summary>
-        /// Every <see cref="PickupObject"/> in game, can be added to.
-        /// </summary>
-        public static List<PickupObject> AllObjects => PickupObjectDatabase.Instance?.Objects;
-
-        /// <summary>
-        /// A completely random gun, every single time
-        /// </summary>
-        public static Gun RandomGun => PickupObjectDatabase.GetRandomGun();
+        
 
         /// <summary>
         /// Is the player in a Gungeon?
@@ -287,20 +250,7 @@ namespace Gungeon.Utilities
             }
         }
 
-        /// <summary>
-        /// Get a random passive.
-        /// </summary>
-        public static PassiveItem RandomPassive
-        {
-            get
-            {
-                List<PassiveItem> passives = new List<PassiveItem>((IEnumerable<PassiveItem>)AllObjects.Where(x => x is PassiveItem));
-
-                int pick = new System.Random().Next(0, passives.Count);
-
-                return passives[pick];
-            }
-        }
+        
 
         /// <summary>
         /// Changes a base stat, uses <see cref="PlayerStats.StatType"/> and <seealso cref="StatChange"/> to calculate change in stats value
@@ -349,31 +299,6 @@ namespace Gungeon.Utilities
                 default:
                     return userChange;
             }
-        }
-
-        /// <summary>
-        /// Get a random gun of quality.
-        /// </summary>
-        /// <param name="excludeIDs">Ids to exclude</param>
-        /// <param name="qualities">Gun qualities</param>
-        /// <returns></returns>
-        public static Gun GetRandomGunOfQuality(List<int> excludeIDs, params PickupObject.ItemQuality[] qualities)
-        {
-            System.Random ran = new System.Random();
-            return PickupObjectDatabase.GetRandomGunOfQualities(ran, excludeIDs, qualities);
-        }
-
-        /// <summary>
-        /// Get a random passive item of quality
-        /// </summary>
-        /// <param name="excludeIDs"></param>
-        /// <param name="qualities"></param>
-        /// <returns></returns>
-        public static PassiveItem GetRandomPassiveOfQuality(List<int> excludeIDs, params PickupObject.ItemQuality[] qualities)
-        {
-            System.Random ran = new System.Random();
-            return PickupObjectDatabase.GetRandomPassiveOfQualities(ran, excludeIDs, qualities);
-
         }
 
 
