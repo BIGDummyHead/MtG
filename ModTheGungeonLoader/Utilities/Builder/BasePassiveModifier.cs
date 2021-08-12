@@ -1,5 +1,5 @@
 ﻿using System;
-using static Gungeon.Utilities.ModUtilities;
+using static Gungeon.Events.GameEvents;
 
 namespace Gungeon.Utilities
 {

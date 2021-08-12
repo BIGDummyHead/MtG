@@ -1,7 +1,7 @@
 ﻿using Gungeon.Debug;
 using System;
 using System.Reflection;
-using static Gungeon.Utilities.ModUtilities;
+using static Gungeon.Events.GameEvents;
 
 namespace Gungeon.Utilities
 {
