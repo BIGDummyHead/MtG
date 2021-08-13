@@ -153,6 +153,34 @@ namespace Gungeon.Utilities
             SetItem(entry?.encounterTrackable?.journalData?.PrimaryDisplayName, display);
         }
 
+        /// <summary>
+        /// Set the full entry of a <see cref="JournalEntry"/> in the ammonomicon
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <param name="display"></param>
+        public static void SetEntry(this JournalEntry entry, string display)
+        {
+            SetItem(entry.AmmonomiconFullEntry, display);
+        }
+        /// <summary>
+        /// Set the full entry of a <see cref="JournalEntry"/> in the ammonomicon
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <param name="display"></param>
+        public static void SetEntry(this EncounterTrackable entry, string display)
+        {
+            SetItem(entry?.journalData?.AmmonomiconFullEntry, display);
+        }
+        /// <summary>
+        /// Set the full entry of a <see cref="JournalEntry"/> in the ammonomicon
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <param name="display"></param>
+        public static void SetEntry(this PickupObject entry, string display)
+        {
+            SetItem(entry?.encounterTrackable?.journalData?.AmmonomiconFullEntry, display);
+        }
+
 
         /// <summary>
         /// Set the notification display name.
