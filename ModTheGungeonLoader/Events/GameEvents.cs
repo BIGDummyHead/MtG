@@ -15,7 +15,8 @@ namespace Gungeon.Events
         public static Harmony HarmonyPatch { get; private set; }
         internal static void Patch()
         {
-            new Harmony("com.Gungeon.Mods");
+            HarmonyPatch = new Harmony("com.Gungeon.Mods");
+            HarmonyPatch.PatchAll();
         }
 
         /// <summary>
@@ -174,7 +175,7 @@ namespace Gungeon.Events
         /// </summary>
         public static event GungeonDelegates.OnActiveDrop AfterActiveDrop;
 
-        [HarmonyPatch(typeof(PlayerItem), "Pickup", typeof(PlayerItem))]
+        [HarmonyPatch(typeof(PlayerItem), "Pickup", typeof(PlayerController))]
         internal class _playerItemPick
         {
             public static void Prefix(PlayerItem __instance, PlayerController player)

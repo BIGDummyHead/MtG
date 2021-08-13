@@ -9,50 +9,121 @@ namespace Gungeon.Utilities
     /// </summary>
     public static class JournalUtilities
     {
+       
         /// <summary>
-        /// Set the full entry of a <see cref="JournalEntry"/> in the ammonomicon
+        /// Get key for full entry in ammonomicon
         /// </summary>
         /// <param name="entry"></param>
-        /// <param name="full"></param>
-        public static void SetFullEntry(this JournalEntry entry, string full)
-        {
-            SetItem(entry.AmmonomiconFullEntry, full);
-        }
-
-
-
-        /// <summary>
-        /// Get a random passive item of quality
-        /// </summary>
-        /// <param name="excludeIDs"></param>
-        /// <param name="qualities"></param>
         /// <returns></returns>
-        public static PassiveItem GetRandomPassiveOfQuality(List<int> excludeIDs, params PickupObject.ItemQuality[] qualities)
+        public static string GetFullEntry(this PickupObject entry)
         {
-            System.Random ran = new System.Random();
-            return PickupObjectDatabase.GetRandomPassiveOfQualities(ran, excludeIDs, qualities);
+            return entry.encounterTrackable.journalData.GetFullEntry();
+        }
+        /// <summary>
+        /// Get key for full entry in ammonomicon
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <returns></returns>
+        public static string GetFullEntry(this JournalEntry entry)
+        {
+            return GetItem(entry.AmmonomiconFullEntry);
+        }
+        /// <summary>
+        /// Get key for full entry in ammonomicon
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <returns></returns>
+        public static string GetFullEntry(this EncounterTrackable entry)
+        {
+            return entry.journalData.GetFullEntry();
+        }
 
+       
+        /// <summary>
+        /// Get key for display name
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <returns></returns>
+        public static string GetDisplayName(this JournalEntry entry)
+        {
+            return GetItem(entry.PrimaryDisplayName);
+        }
+        /// <summary>
+        /// Get key for display name
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <returns></returns>
+        public static string GetDisplayName(this EncounterTrackable entry)
+        {
+            return entry.journalData.GetDisplayName();
+        }
+        /// <summary>
+        /// Get key for display name
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <returns></returns>
+        public static string GetDisplayName(this PickupObject entry)
+        {
+            return entry.encounterTrackable.journalData.GetDisplayName();
+        }
+
+
+        /// <summary>
+        /// Get key for notification display name
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <returns></returns>
+        public static string GetNotificationName(this JournalEntry entry)
+        {
+            return GetItem(entry.NotificationPanelDescription);
+        }
+        /// <summary>
+        /// Get key for notification display name
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <returns></returns>
+        public static string GetNotificationName(this EncounterTrackable entry)
+        {
+            return entry.journalData.GetNotificationName();
+        }
+        /// <summary>
+        /// Get key for notification display name
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <returns></returns>
+        public static string GetNotificationName(this PickupObject entry)
+        {
+            return entry.encounterTrackable.journalData.GetNotificationName();
         }
 
         /// <summary>
-        /// Set the full entry of a <see cref="JournalEntry"/> in the ammonomicon
+        /// Get key for sprite
         /// </summary>
-        /// <param name="trackable"></param>
-        /// <param name="full"></param>
-        public static void SetFullEntry(this EncounterTrackable trackable, string full)
+        /// <param name="entry"></param>
+        /// <returns></returns>
+        public static string GetSprite(this JournalEntry entry)
         {
-            trackable?.journalData?.SetFullEntry(full);
+            return GetItem(entry.AmmonomiconSprite);
+        }
+        /// <summary>
+        /// Get key for sprite
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <returns></returns>
+        public static string GetSprite(this EncounterTrackable entry)
+        {
+            return entry.journalData.GetSprite();
+        }
+        /// <summary>
+        /// Get key for sprite
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <returns></returns>
+        public static string GetSprite(this PickupObject entry)
+        {
+            return entry.encounterTrackable.journalData.GetSprite();
         }
 
-        /// <summary>
-        /// Set the full entry of a <see cref="JournalEntry"/> in the ammonomicon
-        /// </summary>
-        /// <param name="pickup"></param>
-        /// <param name="full"></param>
-        public static void SetFullEntry(this PickupObject pickup, string full)
-        {
-            pickup?.encounterTrackable?.journalData?.SetFullEntry(full);
-        }
 
         /// <summary>
         /// Set the display name of a <see cref="JournalEntry"/> in the ammonomicon
@@ -63,7 +134,6 @@ namespace Gungeon.Utilities
         {
             SetItem(entry.PrimaryDisplayName, display);
         }
-
         /// <summary>
         /// Set the display name of a <see cref="JournalEntry"/> in the ammonomicon
         /// </summary>
@@ -73,7 +143,6 @@ namespace Gungeon.Utilities
         {
             SetItem(entry?.journalData?.PrimaryDisplayName, display);
         }
-
         /// <summary>
         /// Set the display name of a <see cref="JournalEntry"/> in the ammonomicon
         /// </summary>
@@ -83,6 +152,7 @@ namespace Gungeon.Utilities
         {
             SetItem(entry?.encounterTrackable?.journalData?.PrimaryDisplayName, display);
         }
+
 
         /// <summary>
         /// Set the notification display name.
@@ -111,6 +181,8 @@ namespace Gungeon.Utilities
         {
             SetItem(entry?.encounterTrackable?.journalData?.NotificationPanelDescription, name);
         }
+
+
         /// <summary>
         /// Set the sprite of the ammonomicon
         /// </summary>
@@ -129,7 +201,6 @@ namespace Gungeon.Utilities
         {
             SetItem(entry?.journalData?.AmmonomiconSprite, resource);
         }
-
         /// <summary>
         /// Set the sprite of the ammonomicon
         /// </summary>
@@ -195,15 +266,25 @@ namespace Gungeon.Utilities
         {
             if (KeyNull(key))
                 return;
-            var table = GetTable(key);
+            Dictionary<string, StringTableManager.StringCollection> table = GetTable(key);
 
             if (table == null)
             {
-                $"'{key}' is not present in Table".LogInternal(Assembly.GetCallingAssembly(), Logger.LogTypes.error);
+                $"'{key}' is not present in any Tables".LogInternal(Assembly.GetCallingAssembly(), Logger.LogTypes.error);
                 return;
             }
 
             table[key] = (ImplicitStringCollection)value;
+        }
+
+        /// <summary>
+        /// Get an item from a table.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static string GetItem(string key)
+        {
+            return GetTable(key)[key].GetCombinedString();
         }
 
         static Dictionary<string, StringTableManager.StringCollection> GetTable(string key)

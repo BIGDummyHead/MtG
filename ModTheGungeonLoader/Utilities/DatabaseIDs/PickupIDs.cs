@@ -36,6 +36,19 @@ namespace Gungeon.Utilities
         }
 
         /// <summary>
+        /// Get a random passive item of quality
+        /// </summary>
+        /// <param name="excludeIDs"></param>
+        /// <param name="qualities"></param>
+        /// <returns></returns>
+        public static PassiveItem GetRandomPassiveOfQuality(List<int> excludeIDs, params PickupObject.ItemQuality[] qualities)
+        {
+            System.Random ran = new System.Random();
+            return PickupObjectDatabase.GetRandomPassiveOfQualities(ran, excludeIDs, qualities);
+
+        }
+
+        /// <summary>
         /// Get a random gun of quality.
         /// </summary>
         /// <param name="excludeIDs">Ids to exclude</param>

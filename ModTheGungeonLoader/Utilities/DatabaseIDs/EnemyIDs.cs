@@ -61,21 +61,25 @@ namespace Gungeon.Utilities
         }
 
         /// <summary>
-        /// Get an enemy by their guid.
+        /// Get an enemy by their guid or name
         /// </summary>
-        /// <param name="id">GUID</param>
+        /// <param name="guidOrName">GUID</param>
+        /// <param name="name">Use <paramref name="guidOrName"/> as a name parameter</param>
         /// <returns></returns>
-        public static AIActor GetEnemy(string id)
+        public static AIActor GetEnemy(string guidOrName, bool name = false)
         {
-            AIActor actor = EnemyDatabase.GetOrLoadByGuid(id);
+            AIActor actor = name ? EnemyDatabase.GetOrLoadByName(guidOrName) : EnemyDatabase.GetOrLoadByGuid(guidOrName);
 
             if (actor == null)
             {
-                $"Invalid ID while spawning enemy : '{id}'".LogInternal(Assembly.GetCallingAssembly(), Debug.Logger.LogTypes.error);
+                $"Could not get enemy : '{guidOrName}'".LogInternal(Assembly.GetCallingAssembly(), Logger.LogTypes.error);
                 return null;
             }
+
             return actor;
         }
+
+       
 
         /// <summary>
         /// Random enemy.

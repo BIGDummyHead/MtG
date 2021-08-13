@@ -41,8 +41,12 @@ namespace Gungeon.Bootstrap
                 AllocConsole();
                 StreamWriter streamWriter = new StreamWriter(System.Console.OpenStandardOutput());
                 streamWriter.AutoFlush = true;
+
+                StreamReader reader = new StreamReader(Console.OpenStandardInput());
+                
                 System.Console.SetError(streamWriter);
                 System.Console.SetOut(streamWriter);
+                Console.SetIn(reader);
 
                 Application.logMessageReceived += Application_logMessageReceived;
                 consoleOpen = true;
