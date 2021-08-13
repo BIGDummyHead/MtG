@@ -43,7 +43,7 @@ namespace Gungeon.Bootstrap
                 streamWriter.AutoFlush = true;
 
                 StreamReader reader = new StreamReader(Console.OpenStandardInput());
-                
+
                 System.Console.SetError(streamWriter);
                 System.Console.SetOut(streamWriter);
                 Console.SetIn(reader);

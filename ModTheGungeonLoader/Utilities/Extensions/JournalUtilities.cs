@@ -9,7 +9,7 @@ namespace Gungeon.Utilities
     /// </summary>
     public static class JournalUtilities
     {
-       
+
         /// <summary>
         /// Get key for full entry in ammonomicon
         /// </summary>
@@ -38,7 +38,7 @@ namespace Gungeon.Utilities
             return entry.journalData.GetFullEntry();
         }
 
-       
+
         /// <summary>
         /// Get key for display name
         /// </summary>

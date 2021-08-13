@@ -79,7 +79,7 @@ namespace Gungeon.Utilities
             return actor;
         }
 
-       
+
 
         /// <summary>
         /// Random enemy.
