@@ -50,11 +50,11 @@ namespace Gungeon.Events
         /// <summary>
         /// Before a player hits a <see cref="HealthHaver"/> 
         /// </summary>
-        public static event GungeonDelegates.PlayerDidDamage BeforePlayerDoesDamage;
+        public static event GungeonDelegates.PlayerDidDamage BeforeEnemyDamaged;
         /// <summary>
         /// After a player hits a <see cref="HealthHaver"/>.  
         /// </summary>
-        public static event GungeonDelegates.PlayerDidDamage AfterPlayerDoesDamage;
+        public static event GungeonDelegates.PlayerDidDamage AfterEnemyDamaged;
 
         /// <summary>
         /// Before a player loses their armor 
@@ -284,12 +284,12 @@ namespace Gungeon.Events
         {
             public static void Prefix(PlayerController __instance, ref float damageDone, ref bool fatal, HealthHaver target)
             {
-                BeforePlayerDoesDamage?.Invoke(__instance, ref damageDone, ref fatal, target);
+                BeforeEnemyDamaged?.Invoke(__instance, ref damageDone, ref fatal, target);
             }
 
             public static void Postfix(PlayerController __instance, ref float damageDone, ref bool fatal, HealthHaver target)
             {
-                AfterPlayerDoesDamage?.Invoke(__instance, ref damageDone, ref fatal, target);
+                AfterEnemyDamaged?.Invoke(__instance, ref damageDone, ref fatal, target);
             }
         }
 
