@@ -82,6 +82,7 @@ namespace Gungeon.Debug
         /// <param name="clr">Color (Foreground)</param>
         public static void LogUnformatted(object msg, string dll, ConsoleColor clr = ConsoleColor.White)
         {
+
             Console.Write("[");
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.Write($"{DateTime.Now:HH:mm:ss}");
