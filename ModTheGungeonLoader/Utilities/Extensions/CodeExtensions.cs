@@ -25,6 +25,41 @@ namespace Gungeon.Utilities
             return child.BaseType.Inherits(baseType);
         }
 
+        /// <summary>
+        /// Get all words from a string, uses ' ' as base separator
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="seps"></param>
+        /// <returns></returns>
+        public static string[] Words(this string a, params char[] seps)
+        {
+            if (seps.Length < 1)
+                seps = new char[] { ' ' };
+
+            List<char> cs = new List<char>(seps);
+
+            List<string> words = new List<string>();
+
+            string c = string.Empty;
+            foreach (char b in a)
+            {
+                if (cs.Contains(b))
+                {
+                    words.Add(c);
+                    c = string.Empty;
+                }
+                else
+                {
+                    c += b;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(c))
+                words.Add(c);
+
+            return words.ToArray();
+        }
+
         internal static BindingFlags All => (BindingFlags)(-1);
 
         /// <summary>

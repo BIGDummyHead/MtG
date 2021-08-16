@@ -175,6 +175,31 @@ namespace Gungeon.Events
         /// </summary>
         public static event GungeonDelegates.OnActiveDrop AfterActiveDrop;
 
+        /// <summary>
+        /// Before an active item is used.
+        /// </summary>
+        public static event GungeonDelegates.OnActiveUse BeforeActiveUse;
+        /// <summary>
+        /// After an active item is used.
+        /// </summary>
+        public static event GungeonDelegates.OnActiveUse AfterActiveUse;
+
+
+        [HarmonyPatch(typeof(PlayerItem), "Use")]
+        internal class __pat
+        {
+            public static void Prefix(PlayerItem __instance, PlayerController user)
+            {
+                BeforeActiveUse?.Invoke(__instance, user);
+            }
+
+            public static void Postfix(PlayerItem __instance, PlayerController user)
+            {
+                AfterActiveUse?.Invoke(__instance, user);
+            }
+        }
+
+
         [HarmonyPatch(typeof(PlayerItem), "Pickup", typeof(PlayerController))]
         internal class _playerItemPick
         {

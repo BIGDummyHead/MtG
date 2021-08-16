@@ -93,6 +93,7 @@
     <Compile Include="IMod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Utilities\Builder\BaseActiveModifier.cs" />
     <Compile Include="Utilities\Builder\BaseGunModifier.cs" />
     <Compile Include="Utilities\Builder\BasePassiveModifier.cs" />
     <Compile Include="Utilities\Builder\BasePickupModifier.cs" />

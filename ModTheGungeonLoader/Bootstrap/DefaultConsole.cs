@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gungeon.Utilities;
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -9,7 +10,7 @@ namespace Gungeon.Bootstrap
     /// <summary>
     /// The default console
     /// </summary>
-    public  static class DefaultConsole
+    public static class DefaultConsole
     {
         /// <summary>
         /// Allocate the console
@@ -78,6 +79,26 @@ namespace Gungeon.Bootstrap
 
                 Application.logMessageReceived += Application_logMessageReceived;
                 consoleOpen = true;
+                EnableReader();
+                OnConsoleRead += ParseCommand;
+            }
+        }
+
+        private static void ParseCommand(string obj)
+        {
+            string[] words = CodeExtensions.Words(obj);
+
+
+            if (words.Length == 2)
+            {
+                string cmd = words[0];
+                string item = words[1];
+
+                if (cmd.Equals("give", StringComparison.OrdinalIgnoreCase))
+                    if (int.TryParse(item, out int res))
+                    {
+                        PickupIDs.GiveItem(res);
+                    }
             }
         }
 
@@ -110,6 +131,8 @@ namespace Gungeon.Bootstrap
 
         private static bool consoleOpen = false;
 
+        private static bool readerEnabled = false;
+
         private const int showCon = 5;
 
         private const int hideCon = 0;
@@ -119,12 +142,9 @@ namespace Gungeon.Bootstrap
         /// </summary>
         public static event Action<string> OnConsoleRead;
 
-        /// <summary>
-        /// Read a line from the console, non-thread blocking.
-        /// </summary>
-        public static void ReadLine()
+        internal static void EnableReader()
         {
-            if (!consoleOpen)
+            if (!consoleOpen || readerEnabled)
                 return;
 
             new Thread(new ThreadStart(ThreadAccess)).Start();
@@ -134,6 +154,7 @@ namespace Gungeon.Bootstrap
         {
             string evenInvoke = Console.ReadLine();
             OnConsoleRead?.Invoke(evenInvoke);
+            ThreadAccess();
             //thread = new Thread(new ThreadStart(ThreadAccess));
         }
     }

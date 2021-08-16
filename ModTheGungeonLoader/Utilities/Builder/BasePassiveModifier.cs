@@ -22,7 +22,7 @@ namespace Gungeon.Utilities
 
         private void BefPick(PassiveItem obj, PlayerController pickUpUser)
         {
-            if (Passive?.PickupObjectId != obj?.PickupObjectId)
+            if (!obj.SameItem(Passive))
                 return;
 
             OnPickup(obj, pickUpUser);
@@ -30,7 +30,7 @@ namespace Gungeon.Utilities
 
         private void BefDrop(PassiveItem item, PlayerController player, DebrisObject o)
         {
-            if (Passive?.PickupObjectId != item?.PickupObjectId)
+            if (!item.SameItem(Passive))
                 return;
 
             z = o;

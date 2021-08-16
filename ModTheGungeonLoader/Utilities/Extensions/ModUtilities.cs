@@ -379,7 +379,16 @@ namespace Gungeon.Utilities
         /// </summary>
         public static PlayerController MostActivePlayer => GameManager.Instance.BestActivePlayer;
 
-
+        /// <summary>
+        /// Checks IDs of 2 items.
+        /// </summary>
+        /// <param name="check"></param>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static bool SameItem(this PickupObject check, PickupObject obj)
+        {
+            return check?.PickupObjectId == obj?.PickupObjectId;
+        }
 
     }
 }

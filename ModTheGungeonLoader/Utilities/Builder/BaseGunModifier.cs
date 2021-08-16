@@ -65,7 +65,7 @@ namespace Gungeon.Utilities
 
         private void BefGunDrp(Gun gun, ref float dropHeight, DebrisObject droppedItem)
         {
-            if (this.UserGun != gun)
+            if (!UserGun.SameItem(gun))
                 return;
 
             z = droppedItem;
@@ -83,13 +83,14 @@ namespace Gungeon.Utilities
                 return;
             }
 
-            if (UserGun.PickupObjectId == obj.PickupObjectId)
+
+            if (UserGun.SameItem(obj))
                 OnPickup(obj, pickUpUser);
         }
 
         private void BefGunSht(Projectile projectile, bool belongsToPlayer)
         {
-            if (projectile.PossibleSourceGun == UserGun && belongsToPlayer)
+            if (projectile.PossibleSourceGun.SameItem(UserGun) && belongsToPlayer)
                 OnFire(projectile.PossibleSourceGun, projectile);
         }
 

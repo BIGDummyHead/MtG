@@ -130,6 +130,12 @@ namespace Gungeon.Events
         /// <param name="isPlayer"/>
         public delegate void OnGunAttack(Gun gun, bool isPlayer, ref Gun.AttackResult atkResult, ref ProjectileData overrideData, ref GameObject overrideBullet);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="active"></param>
+        /// <param name="user"></param>
+        public delegate void OnActiveUse(PlayerItem active, PlayerController user);
     }
 
 
