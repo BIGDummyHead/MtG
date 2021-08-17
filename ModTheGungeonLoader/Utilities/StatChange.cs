@@ -18,7 +18,7 @@
         /// </summary>
         Sub,
         /// <summary>
-        /// Divided an existing stat
+        /// Divide an existing stat
         /// </summary>
         Div,
         /// <summary>
