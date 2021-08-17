@@ -11,12 +11,14 @@ Please when pushing updates, add your update info below. We will delete this aft
 
 MtG is my go at modding Enter the Gungeon!
 
-Planned updates:
+### Want to contribute?
 
-+ [X] Extra Mod utils - July 31st
-+ [x] Easy loot spawning - July 31st
-+ [ ] Easy item adding - August 2nd
-+ [ ] Character builder in Unity Editor - Mid August
+You can:
+
+* Add Harmony Patches
+* Create Item Building 
+* Add in utilities
+* Create plugins
 
 ## Why choose this loader?
 
