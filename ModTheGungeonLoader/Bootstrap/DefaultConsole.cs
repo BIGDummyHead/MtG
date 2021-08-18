@@ -1,6 +1,10 @@
-﻿using Gungeon.Utilities;
+﻿using Gungeon.Debug;
+using Gungeon.Utilities;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using UnityEngine;
@@ -77,10 +81,17 @@ namespace Gungeon.Bootstrap
                 System.Console.SetOut(writer);
                 Console.SetIn(reader);
 
-                Application.logMessageReceived += Application_logMessageReceived;
+                Application.logMessageReceived += UnityMessageReceived;
                 consoleOpen = true;
                 EnableReader();
-                OnConsoleRead += ParseCommand;
+
+                ParseArgument.Add("give", x =>
+                {
+                    int a = (int)x[0];
+
+                    PickupIDs.GiveItem(a);
+
+                }, ParseArgument.Create("item"), ParseArgument.Create(typeof(int)));
             }
         }
 
@@ -88,17 +99,140 @@ namespace Gungeon.Bootstrap
         {
             string[] words = CodeExtensions.Words(obj);
 
+            if (words.Length < 1)
+                return;
 
-            if (words.Length == 2)
+            string command = words[0].ToLower();
+
+            bool success = _commands.TryGetValue(command, out ParseArgument[] args);
+
+            if (!success)
+            { 
+                "Command is not recognized".LogError();
+                return;
+            }
+
+
+            if (Match(words, args, out object[] res))
             {
-                string cmd = words[0];
-                string item = words[1];
+                _commandMethod[command]?.Invoke(res);
+            }
+            else
+            {
+                "Command failed".LogError();
+            }
+        }
 
-                if (cmd.Equals("give", StringComparison.OrdinalIgnoreCase))
-                    if (int.TryParse(item, out int res))
-                    {
-                        PickupIDs.GiveItem(res);
-                    }
+        private static bool Match(string[] words, ParseArgument[] ar, out object[] results)
+        {
+            List<object> oos = new List<object>();
+            for (int i = 0; i < words.Length; i++)
+            {
+                string word = words[i];
+                ParseArgument arg = ar[i];
+
+                if (arg.dynamic)
+                {
+                    arg.value = Convert.ChangeType(word, arg.convert);
+                    oos.Add(arg.value);
+                }
+                else if(!arg.dynamic && !word.Equals(arg.name, StringComparison.OrdinalIgnoreCase))
+                {
+                    results = null;
+                    return false;
+                }
+            }
+
+            results = oos.ToArray();
+            return true;
+        }
+
+
+
+        private static Dictionary<string, ParseArgument[]> _commands = new Dictionary<string, ParseArgument[]>();
+        private static Dictionary<string, Action<object[]>> _commandMethod = new Dictionary<string, Action<object[]>>();
+
+        /// <summary>
+        /// Parse-able argument.
+        /// </summary>
+        public sealed class ParseArgument
+        {
+
+            private ParseArgument()
+            {
+
+            }
+
+            /// <summary>
+            /// Only required if <see cref="dynamic"/> is false. Required for player to type in.
+            /// </summary>
+            public string name;
+
+            /// <summary>
+            /// Is this a value? Everchanging value.
+            /// </summary>
+            public bool dynamic;
+
+            /// <summary>
+            /// If <see cref="dynamic"/> must set.
+            /// </summary>
+            public Type convert;
+
+            /// <summary>
+            /// Set if is <see cref="dynamic"/> 
+            /// </summary>
+            public object value;
+
+            /// <summary>
+            /// Add a command
+            /// </summary>
+            /// <param name="commandName"></param>
+            /// <param name="onCommandExecute"></param>
+            /// <param name="args"></param>
+            public static void Add(string commandName, Action<object[]> onCommandExecute, params ParseArgument[] args)
+            {
+                if (args.Length < 1)
+                    throw new Exception("Parse-able arguments must be > 0");
+
+                List<ParseArgument> oo = new List<ParseArgument>();
+
+
+                commandName = commandName.ToLower();
+
+                oo.Add(Create(commandName));
+                oo.AddRange(args);
+
+                _commands.Add(commandName, oo.ToArray());
+                _commandMethod.Add(commandName, onCommandExecute);
+            }
+
+            /// <summary>
+            /// Create a static argument.
+            /// </summary>
+            /// <param name="name"></param>
+            /// <returns></returns>
+            public static ParseArgument Create(string name)
+            {
+                return new ParseArgument
+                {
+                    dynamic = false,
+                    name = name
+                };
+            }
+
+            /// <summary>
+            /// Create a dynamic argument. 
+            /// </summary>
+            /// <remarks>Must be string parse-able.</remarks>
+            /// <param name="a"></param>
+            /// <returns></returns>
+            public static ParseArgument Create(Type a)
+            {
+                return new ParseArgument
+                {
+                    dynamic = true,
+                    convert = a
+                };
             }
         }
 
@@ -106,7 +240,7 @@ namespace Gungeon.Bootstrap
         private static StreamReader reader;
 
         private const string Unity = "UnityEngine.dll";
-        private static void Application_logMessageReceived(string condition, string stackTrace, LogType type)
+        private static void UnityMessageReceived(string condition, string stackTrace, LogType type)
         {
 
             switch (type)
@@ -141,21 +275,40 @@ namespace Gungeon.Bootstrap
         /// When the console is read.
         /// </summary>
         public static event Action<string> OnConsoleRead;
+        static Thread consoleThread;
 
         internal static void EnableReader()
         {
             if (!consoleOpen || readerEnabled)
                 return;
 
-            new Thread(new ThreadStart(ThreadAccess)).Start();
+            UnityEngine.Object.DontDestroyOnLoad(new GameObject("__CONSOLETHREADMANAGER").AddComponent<ThreadManager>().gameObject);
+
+            consoleThread = new Thread(new ThreadStart(ThreadAccess));
+            consoleThread.IsBackground = true;
+            consoleThread.Start();
+
+
+            readerEnabled = true;
         }
 
         private static void ThreadAccess()
         {
-            string evenInvoke = Console.ReadLine();
-            OnConsoleRead?.Invoke(evenInvoke);
+            string eventInvoke = Console.ReadLine();
+            OnConsoleRead?.Invoke(eventInvoke);
+            ParseCommand(eventInvoke);
             ThreadAccess();
-            //thread = new Thread(new ThreadStart(ThreadAccess));
         }
+        
+        class ThreadManager : MonoBehaviour
+        {
+            void OnApplicationQuit()
+            {
+                FreeConsole();
+            }
+        }
+
+
+
     }
 }
