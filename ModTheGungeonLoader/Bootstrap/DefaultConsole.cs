@@ -104,7 +104,7 @@ namespace Gungeon.Bootstrap
 
             string command = words[0].ToLower();
 
-            bool success = _commands.TryGetValue(command, out ParseArgument[] args);
+            bool success = ParseArgument._commands.TryGetValue(command, out ParseArgument[] args);
 
             if (!success)
             { 
@@ -115,7 +115,7 @@ namespace Gungeon.Bootstrap
 
             if (Match(words, args, out object[] res))
             {
-                _commandMethod[command]?.Invoke(res);
+                ParseArgument._commandMethod[command]?.Invoke(res);
             }
             else
             {
@@ -149,92 +149,9 @@ namespace Gungeon.Bootstrap
 
 
 
-        private static Dictionary<string, ParseArgument[]> _commands = new Dictionary<string, ParseArgument[]>();
-        private static Dictionary<string, Action<object[]>> _commandMethod = new Dictionary<string, Action<object[]>>();
+        
 
-        /// <summary>
-        /// Parse-able argument.
-        /// </summary>
-        public sealed class ParseArgument
-        {
-
-            private ParseArgument()
-            {
-
-            }
-
-            /// <summary>
-            /// Only required if <see cref="dynamic"/> is false. Required for player to type in.
-            /// </summary>
-            public string name;
-
-            /// <summary>
-            /// Is this a value? Everchanging value.
-            /// </summary>
-            public bool dynamic;
-
-            /// <summary>
-            /// If <see cref="dynamic"/> must set.
-            /// </summary>
-            public Type convert;
-
-            /// <summary>
-            /// Set if is <see cref="dynamic"/> 
-            /// </summary>
-            public object value;
-
-            /// <summary>
-            /// Add a command
-            /// </summary>
-            /// <param name="commandName"></param>
-            /// <param name="onCommandExecute"></param>
-            /// <param name="args"></param>
-            public static void Add(string commandName, Action<object[]> onCommandExecute, params ParseArgument[] args)
-            {
-                if (args.Length < 1)
-                    throw new Exception("Parse-able arguments must be > 0");
-
-                List<ParseArgument> oo = new List<ParseArgument>();
-
-
-                commandName = commandName.ToLower();
-
-                oo.Add(Create(commandName));
-                oo.AddRange(args);
-
-                _commands.Add(commandName, oo.ToArray());
-                _commandMethod.Add(commandName, onCommandExecute);
-            }
-
-            /// <summary>
-            /// Create a static argument.
-            /// </summary>
-            /// <param name="name"></param>
-            /// <returns></returns>
-            public static ParseArgument Create(string name)
-            {
-                return new ParseArgument
-                {
-                    dynamic = false,
-                    name = name
-                };
-            }
-
-            /// <summary>
-            /// Create a dynamic argument. 
-            /// </summary>
-            /// <remarks>Must be string parse-able.</remarks>
-            /// <param name="a"></param>
-            /// <returns></returns>
-            public static ParseArgument Create(Type a)
-            {
-                return new ParseArgument
-                {
-                    dynamic = true,
-                    convert = a
-                };
-            }
-        }
+        
 
         private static StreamWriter writer;
         private static StreamReader reader;
@@ -310,5 +227,89 @@ namespace Gungeon.Bootstrap
 
 
 
+    }
+
+
+    /// <summary>
+    /// Parse-able argument.
+    /// </summary>
+    public sealed class ParseArgument
+    {
+
+        internal static Dictionary<string, ParseArgument[]> _commands = new Dictionary<string, ParseArgument[]>();
+        internal static Dictionary<string, Action<object[]>> _commandMethod = new Dictionary<string, Action<object[]>>();
+
+        private ParseArgument()
+        {
+
+        }
+
+        /// <summary>
+        /// Only required if <see cref="dynamic"/> is false. Required for player to type in.
+        /// </summary>
+        public string name;
+
+        /// <summary>
+        /// Is this a value? Everchanging value.
+        /// </summary>
+        public bool dynamic;
+
+        /// <summary>
+        /// If <see cref="dynamic"/> must set.
+        /// </summary>
+        public Type convert;
+
+        /// <summary>
+        /// Set if is <see cref="dynamic"/> 
+        /// </summary>
+        public object value;
+
+        /// <summary>
+        /// Add a command
+        /// </summary>
+        /// <param name="commandName"></param>
+        /// <param name="onCommandExecute"></param>
+        /// <param name="args"></param>
+        public static void Add(string commandName, Action<object[]> onCommandExecute, params ParseArgument[] args)
+        {
+            List<ParseArgument> oo = new List<ParseArgument>();
+
+            commandName = commandName.ToLower();
+
+            oo.Add(Create(commandName));
+            oo.AddRange(args);
+
+           _commands.Add(commandName, oo.ToArray());
+            _commandMethod.Add(commandName, onCommandExecute);
+        }
+
+        /// <summary>
+        /// Create a static argument.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static ParseArgument Create(string name)
+        {
+            return new ParseArgument
+            {
+                dynamic = false,
+                name = name
+            };
+        }
+
+        /// <summary>
+        /// Create a dynamic argument. 
+        /// </summary>
+        /// <remarks>Must be string parse-able.</remarks>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        public static ParseArgument Create(Type a)
+        {
+            return new ParseArgument
+            {
+                dynamic = true,
+                convert = a
+            };
+        }
     }
 }
