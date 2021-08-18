@@ -137,6 +137,7 @@ namespace Gungeon.Bootstrap
                             foreach (Type mod in mods)
                             {
                                 infoOnMod = GetCustomAttribute<Info>(mod) ?? CreateInfo(mod, LoadedMods.Count + 1);
+                                infoOnMod.Directory = dir;
                                 if (LoadedMods.ContainsKey(infoOnMod.Name))
                                 {
                                     Debug.Logger.LogWarning($"Mod has already been loaded : {infoOnMod.Name}");
@@ -166,7 +167,7 @@ namespace Gungeon.Bootstrap
                         }
                         catch (Exception ex)
                         {
-                            Debug.Logger.LogWarning($"Woah, something happened while loading {infoOnMod.Name}");
+                            Debug.Logger.LogWarning($"Woah, something happened while loading {infoOnMod?.Name}");
                             Debug.Logger.LogError($"{ex.Message}\r\n{ex.InnerException?.Message}");
                         }
                     }
