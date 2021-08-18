@@ -87,11 +87,15 @@ namespace Gungeon.Bootstrap
 
                 ParseArgument.Add("give", x =>
                 {
-                    int a = (int)x[0];
+                    if (int.TryParse(x[0], out int a))
+                    {
+                        var z = PickupIDs.GiveItem(a);
 
-                    PickupIDs.GiveItem(a);
+                        if (z != null)
+                            $"{z.DisplayName} - added to inventory.".Log(ConsoleColor.Green);
+                    }
 
-                }, ParseArgument.Create("item"), ParseArgument.Create(typeof(int)));
+                }, ParseArgument.Create("item"), ParseArgument.Create());
             }
         }
 
@@ -107,13 +111,13 @@ namespace Gungeon.Bootstrap
             bool success = ParseArgument._commands.TryGetValue(command, out ParseArgument[] args);
 
             if (!success)
-            { 
+            {
                 "Command is not recognized".LogError();
                 return;
             }
 
 
-            if (Match(words, args, out object[] res))
+            if (Match(words, args, out string[] res))
             {
                 ParseArgument._commandMethod[command]?.Invoke(res);
             }
@@ -123,9 +127,9 @@ namespace Gungeon.Bootstrap
             }
         }
 
-        private static bool Match(string[] words, ParseArgument[] ar, out object[] results)
+        private static bool Match(string[] words, ParseArgument[] ar, out string[] results)
         {
-            List<object> oos = new List<object>();
+            List<string> oos = new List<string>();
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i];
@@ -133,10 +137,9 @@ namespace Gungeon.Bootstrap
 
                 if (arg.dynamic)
                 {
-                    arg.value = Convert.ChangeType(word, arg.convert);
-                    oos.Add(arg.value);
+                    oos.Add(word);
                 }
-                else if(!arg.dynamic && !word.Equals(arg.name, StringComparison.OrdinalIgnoreCase))
+                else if (!arg.dynamic && !word.Equals(arg.name, StringComparison.OrdinalIgnoreCase))
                 {
                     results = null;
                     return false;
@@ -149,9 +152,9 @@ namespace Gungeon.Bootstrap
 
 
 
-        
 
-        
+
+
 
         private static StreamWriter writer;
         private static StreamReader reader;
@@ -216,7 +219,7 @@ namespace Gungeon.Bootstrap
             ParseCommand(eventInvoke);
             ThreadAccess();
         }
-        
+
         class ThreadManager : MonoBehaviour
         {
             void OnApplicationQuit()
@@ -237,7 +240,7 @@ namespace Gungeon.Bootstrap
     {
 
         internal static Dictionary<string, ParseArgument[]> _commands = new Dictionary<string, ParseArgument[]>();
-        internal static Dictionary<string, Action<object[]>> _commandMethod = new Dictionary<string, Action<object[]>>();
+        internal static Dictionary<string, Action<string[]>> _commandMethod = new Dictionary<string, Action<string[]>>();
 
         private ParseArgument()
         {
@@ -255,11 +258,6 @@ namespace Gungeon.Bootstrap
         public bool dynamic;
 
         /// <summary>
-        /// If <see cref="dynamic"/> must set.
-        /// </summary>
-        public Type convert;
-
-        /// <summary>
         /// Set if is <see cref="dynamic"/> 
         /// </summary>
         public object value;
@@ -270,7 +268,7 @@ namespace Gungeon.Bootstrap
         /// <param name="commandName"></param>
         /// <param name="onCommandExecute"></param>
         /// <param name="args"></param>
-        public static void Add(string commandName, Action<object[]> onCommandExecute, params ParseArgument[] args)
+        public static void Add(string commandName, Action<string[]> onCommandExecute, params ParseArgument[] args)
         {
             List<ParseArgument> oo = new List<ParseArgument>();
 
@@ -279,7 +277,7 @@ namespace Gungeon.Bootstrap
             oo.Add(Create(commandName));
             oo.AddRange(args);
 
-           _commands.Add(commandName, oo.ToArray());
+            _commands.Add(commandName, oo.ToArray());
             _commandMethod.Add(commandName, onCommandExecute);
         }
 
@@ -298,18 +296,16 @@ namespace Gungeon.Bootstrap
         }
 
         /// <summary>
-        /// Create a dynamic argument. 
+        /// Create a dynamic value.
         /// </summary>
-        /// <remarks>Must be string parse-able.</remarks>
-        /// <param name="a"></param>
         /// <returns></returns>
-        public static ParseArgument Create(Type a)
+        public static ParseArgument Create()
         {
             return new ParseArgument
             {
-                dynamic = true,
-                convert = a
+                dynamic = true
             };
         }
+
     }
 }
