@@ -109,9 +109,15 @@ namespace Gungeon.Utilities
         /// <remarks>Player defaults to the current player in game.</remarks>
         public static PickupObject GiveItem(int id, PlayerController player = null)
         {
-            player = player ?? ModUtilities.CurrentPlayer;
+            return GiveItem(GetItem(id), player);
+        }
 
-            PickupObject pick = PickupIDs.GetItem(id);
+        public static PickupObject GiveItem(PickupObject pick, PlayerController player)
+        {
+            if(pick == null)
+                return null;
+
+            player = player ?? ModUtilities.CurrentPlayer;
 
             if (pick is Gun)
             {
@@ -126,13 +132,9 @@ namespace Gungeon.Utilities
             }
             else if (pick is PlayerItem)
             {
-                PlayerItem item = pick as PlayerItem;
-                item.Pickup(player);
-
+                (pick as PlayerItem).Pickup(player);
                 return pick;
             }
-
-            "Item could not be found.".LogError();
 
             return null;
         }
@@ -148,10 +150,7 @@ namespace Gungeon.Utilities
         /// Read comments if any for spawn names of items.</remarks>
         public static PickupObject GiveItem(string itemName, bool useDisplayName = false, PlayerController player = null)
         {
-            player = player ?? ModUtilities.CurrentPlayer;
-
-            int id = GetItem(itemName, useDisplayName).PickupObjectId;
-            return GiveItem(id, player);
+            return GiveItem(GetItem(itemName, useDisplayName), player);
         }
 
         #region IDs
