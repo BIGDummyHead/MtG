@@ -162,55 +162,42 @@ namespace Gungeon.Bootstrap
             if (words.Length < 1)
                 return;
 
-            string command = words[0].ToLower();
+            string commandName = words[0].ToLower();
 
-            bool success = ParseArgument._commands.TryGetValue(command, out ParseArgument[] args);
-
-            if (!success)
+            if(ParseArgument._commands.TryGetValue(commandName, out ParseArgument[] args))
             {
-                "Command is not recognized".LogError();
-                return;
-            }
-
-            if(args.Length != words.Length)
-                return;
-
-            if (Match(words, args, out string[] res))
-            {
-                ParseArgument._commandMethod[command]?.Invoke(res);
+                if(GetInvocation(words, args, out string[] invoke))
+                {
+                    ParseArgument._commandMethod[commandName]?.Invoke(invoke);
+                }
             }
             else
-            {
-                "Command failed".LogError();
-            }
+                $"Command does not exist '{commandName}".LogWarning();
         }
 
-        private static bool Match(string[] words, ParseArgument[] ar, out string[] results)
+        private static bool GetInvocation(string[] everyWord, ParseArgument[] parse, out string[] parsed)
         {
-            List<string> oos = new List<string>();
-            for (int i = 0; i < words.Length; i++)
+            if(everyWord.Length != parse.Length)
             {
-                string word = words[i];
-                ParseArgument arg = ar[i];
+                "Command missing arguments".LogError();
+                parsed = new string[0];
+                return false;
+            }    
 
-                if (arg.dynamic)
-                {
-                    oos.Add(word);
-                }
-                else if (!arg.dynamic && !word.Equals(arg.name, StringComparison.OrdinalIgnoreCase))
-                {
-                    results = null;
-                    return false;
-                }
+            List<string> _args = new List<string>();
+
+            for (int i = 0; i < everyWord.Length; i++)
+            {
+                var p = parse[i];
+                var s = everyWord[i];
+
+                if (p.dynamic)
+                    _args.Add(s);
             }
 
-            results = oos.ToArray();
+            parsed = _args.ToArray();
             return true;
         }
-
-
-
-
 
 
 
