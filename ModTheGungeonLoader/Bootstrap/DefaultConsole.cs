@@ -89,6 +89,7 @@ namespace Gungeon.Bootstrap
                 {
                     if (int.TryParse(x[0], out int a))
                     {
+                        "Finding item by ID".Log(ConsoleColor.Cyan);
                         var z = PickupIDs.GiveItem(a);
 
                         if (z != null)
@@ -96,8 +97,61 @@ namespace Gungeon.Bootstrap
                         else
                            "Item could not be added to Inventory.".LogWarning();
                     }
+                    else
+                    {
+                        "Finding item by NAME".Log(ConsoleColor.Cyan);
+
+                        if (PickupIDs.FromNames.TryGetValue(x[0], out int id))
+                        {
+                            var z = PickupIDs.GiveItem(id);
+
+                            if (z != null)
+                                $"{z.DisplayName} - added to inventory.".Log(ConsoleColor.Green);
+                            else
+                                "Item could not be added to Inventory.".LogWarning();
+                        }
+                        else
+                            $"Item does not exist by {x[0]}".LogWarning();
+
+                        
+                    }
 
                 }, ParseArgument.Create("item"), ParseArgument.Create());
+
+                ParseArgument.Add("spawn", x =>
+                {
+                    if (EnemyIDs.FromNames.TryGetValue(x[0], out string guid))
+                    {
+                        var e = EnemyIDs.Spawn(EnemyIDs.GetEnemy(guid), ModUtilities.CurrentPlayer.CurrentRoom);
+
+                        $"{e.ActorName} spawned!".Log(ConsoleColor.Green);
+                    }
+                    else
+                        $"'{x[0]}' does not exist and their is no GUID for it.".LogWarning();
+
+                }, ParseArgument.Create());
+
+                ParseArgument.Add("heal", x =>
+                {
+                    foreach (var item in ModUtilities.AllPlayers)
+                    {
+                        item.healthHaver.FullHeal();
+                    }
+                    "Player healed".Log(ConsoleColor.Green);
+                });
+
+                ParseArgument.Add("refill", x =>
+                {
+                    foreach (var item in ModUtilities.AllPlayers)
+                    {
+                        foreach (var gun in item.inventory.AllGuns)
+                        {
+                            gun.GainAmmo(gun.GetBaseMaxAmmo());
+                        }
+                    }
+
+                    "Ammo refilled".Log(ConsoleColor.Green);
+                });
             }
         }
 
@@ -118,6 +172,8 @@ namespace Gungeon.Bootstrap
                 return;
             }
 
+            if(args.Length != words.Length)
+                return;
 
             if (Match(words, args, out string[] res))
             {
