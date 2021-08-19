@@ -48,4 +48,8 @@ This project has a wiki which can be found [here](https://github.com/BIGDummyHea
 
 #### [Harmony](https://github.com/pardeike/Harmony) by [pardeike](https://github.com/pardeike)
 
+## Helpful Modding Tools
+
+#### [dnSpy](https://github.com/dnSpy/dnSpy), .Net Debugger and Assembly editor. Contributors can be found [here](https://github.com/dnSpy/dnSpy/graphs/contributors)
+
 _________________________________________________
