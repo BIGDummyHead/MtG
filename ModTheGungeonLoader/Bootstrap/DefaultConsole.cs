@@ -94,6 +94,16 @@ namespace Gungeon.Bootstrap
                         if (z != null)
                             $"{z.DisplayName} - added to inventory.".Log(ConsoleColor.Green);
                     }
+                    else{
+                        PickupObject obj = PickupIDs.GetItem(x[0], false) ? PickupIDs.GetItem(x[0], true);
+                        int id = obj.PickupObjectId;
+
+                        obj = PickupIDs.GiveItem(id);
+
+                        if(obj != null)
+                           $"{obj.DisplayName} - added to inventory.".Log(ConsoleColor.Green);
+                           
+                    }
 
                 }, ParseArgument.Create("item"), ParseArgument.Create());
             }
