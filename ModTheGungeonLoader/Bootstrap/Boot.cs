@@ -7,14 +7,26 @@ using System.Reflection;
 
 namespace Gungeon.Bootstrap
 {
-    //a simple class at handling the loading process.
-    internal class Boot
+    /// <summary>
+    /// A simple class that is invoked by the UnityEngine.dll
+    /// </summary>
+    public class Boot
     {
-        public static void Load()
+        /// <summary>
+        /// Enable the developer mode? Enables a UI to debug different objects. 
+        /// </summary>
+        /// <remarks>Must be enabled in Plugin</remarks>
+        public static bool DeveloperModEnabled = false;
+
+        internal static void Load()
         {
             //hey whatchu you doin ;)
             LoadPlugins();
             Events.GameEvents.Patch();
+
+            if (DeveloperModEnabled)
+                UnityExplorer.ExplorerStandalone.CreateInstance();
+
             ModLoader.GetGlobal().LoaderLoad();
         }
 
