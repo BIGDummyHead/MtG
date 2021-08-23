@@ -15,7 +15,7 @@ MtG is my go at modding Enter the Gungeon!
 
 You can:
 
-* Add Harmony Patches
+* Add Harmony Patches - events. Please follow the design pattern
 * Create Item Building 
 * Add in utilities
 * Create plugins
@@ -29,6 +29,7 @@ You can:
 * Settings
 * Custom Mod Loading with plugins
 * Custom Debugging
+* Extensive debugging with Unity Explorer
 
 ## Install
 
