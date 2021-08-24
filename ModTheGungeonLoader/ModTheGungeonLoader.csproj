@@ -42,6 +42,10 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>D:\Epic Games Installs\EnterTheGungeon\EtG_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="StringParser, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\StringParser.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

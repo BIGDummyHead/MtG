@@ -16,7 +16,7 @@ namespace Gungeon.Bootstrap
         /// <summary>
         /// Enable the developer mode? Enables a UI to debug different objects. 
         /// </summary>
-        /// <remarks>Must be enabled in Plugin. Setting to true will create an instance of <see cref="UnityExplorer.ExplorerStandalone"/></remarks>
+        /// <remarks>Setting to true will create an instance of <see cref="UnityExplorer.ExplorerStandalone" | Setting to fase does nothing./></remarks>
         public static bool DeveloperModeEnabled
         {
             get
