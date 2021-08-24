@@ -65,6 +65,8 @@ This project has a wiki which can be found [here](https://github.com/BIGDummyHea
 
 #### [Unity Explorer](https://github.com/sinai-dev/UnityExplorer) by [sini-dev](https://github.com/sinai-dev)
 
+#### String Parser by [BIGDummyHead](https://github.com/bigdummyhead) a fork of a command parser I made
+
 ## Helpful Modding Tools
 
 #### [dnSpy](https://github.com/dnSpy/dnSpy), .Net Debugger and Assembly editor. Contributors can be found [here](https://github.com/dnSpy/dnSpy/graphs/contributors)
