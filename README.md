@@ -46,10 +46,10 @@ You can:
 
 ### Create 
 
-1. Create your .Net Framework 3.5 project and make a IPlugin class
+1. Create your .Net Framework 3.5 project, make either a IPlugin or IMod class
 2. In the load method, include this piece ``Boot.DeveloperModeEnabled = true;``
-3. Create a Plugins folder in the Gungeon.exe
-4. Drop your .dll file into the Plugins folder
+3. Create a Plugins or Mods folder in the Gungeon.exe
+4. Drop your .dll file into the Plugins or Mods folder
 
 ## Licensing
 
