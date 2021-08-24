@@ -12,11 +12,29 @@ namespace Gungeon.Bootstrap
     /// </summary>
     public class Boot
     {
+        private static bool _devMode = false;
         /// <summary>
         /// Enable the developer mode? Enables a UI to debug different objects. 
         /// </summary>
-        /// <remarks>Must be enabled in Plugin</remarks>
-        public static bool DeveloperModeEnabled = false;
+        /// <remarks>Must be enabled in Plugin. Setting to true will create an instance of <see cref="UnityExplorer.ExplorerStandalone"/></remarks>
+        public static bool DeveloperModeEnabled
+        {
+            get
+            {
+                return _devMode;
+            }
+
+            set
+            {
+                if (value)
+                {
+                    UnityExplorer.ExplorerStandalone.CreateInstance();
+                    _devMode = true;
+                }
+                else
+                    Logger.LogWarning("CANNOT DISABLE DEVELOPER MODE");
+            }
+        }
 
         internal static void Load()
         {
@@ -24,11 +42,9 @@ namespace Gungeon.Bootstrap
             LoadPlugins();
             Events.GameEvents.Patch();
 
-            if (DeveloperModeEnabled)
-                UnityExplorer.ExplorerStandalone.CreateInstance();
-            
             ModLoader.GetGlobal().LoaderLoad();
         }
+
 
         private static void LoadPlugins()
         {
