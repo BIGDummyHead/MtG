@@ -26,7 +26,7 @@ namespace Gungeon.Bootstrap
 
             if (DeveloperModeEnabled)
                 UnityExplorer.ExplorerStandalone.CreateInstance();
-
+            
             ModLoader.GetGlobal().LoaderLoad();
         }
 
